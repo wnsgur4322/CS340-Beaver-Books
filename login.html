@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/owl.carousel.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="js/login.js" charset="utf-8" defer></script>
 </head>
 
 <body>
@@ -21,18 +22,18 @@
     </div>
     <section class="static login-about-sec">
         <div class="center">
-            <h1>Sign in</h1>
+            <h1>Sign in (temporary email: kimchi@gmail.com, password: taco)</h1>
             <div class="form">
                 <form>
                     <div class="loginrow">
                         <div class="col-md-5">
-                            <input placeholder="Enter Email Address" required class="center">
+                            <input type="email" id="useremail" placeholder="Enter Email Address" required class="center">
                         </div>
                         <div class="col-md-5">
-                            <input type="email" placeholder="Enter Password" required class="center">
+                            <input type= "password" id="pswrd" placeholder="Enter Password" required class="center">
                         </div>
                         <div class="col-lg-8 col-md-12">
-                            <button class="btn black">Login</button>
+                            <button class="btn black" id="login_button">Login</button>
                             <h5>not Registered? <a class="login-a" href="register.html"> Regiseter here</a></h5>
                         </div>
                     </div>
