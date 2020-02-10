@@ -8,6 +8,30 @@
 /* color */
 /* Font size */
 /* mixin */
+.books {
+  margin: 50px;
+  padding: 50px;
+  width: 500px;
+  text-align: center;
+}
+
+#total_books{
+  margin-top: 50px;
+  margin-bottom: 0px;
+  margin-left: 100px;
+  font-size: x-large;
+}
+
+button {
+  background-color: #cbcbcb;
+  font-size: large;
+}
+
+button:hover{
+  background-color: #00aeef;
+  color: white;
+}
+
 body {
   margin: 0px;
   padding: 0px;
