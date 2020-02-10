@@ -1,18 +1,10 @@
-/*
-	Book Store Sass Theme
-	Author: Vinay Reddy
-	version: 0.0.1
-*/
-/* BASE */
-/* Font family */
-/* color */
-/* Font size */
-/* mixin */
 .books {
   margin: 50px;
   padding: 50px;
   width: 500px;
   text-align: center;
+  align-items: center;
+  align-content: center;
 }
 
 #total_books{
