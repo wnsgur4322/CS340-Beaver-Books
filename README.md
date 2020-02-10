@@ -3,5 +3,5 @@
 
 ### urls 
 ### 1. https://wnsgur4322.github.io/CS340-Beaver-Books/ (static)
-### 2. http://web.engr.oregonstate.edu/~jeongju/beaver-books/about.html (recommend)
+### 2. http://web.engr.oregonstate.edu/~jeongju/beaver-books (recommend)
  
