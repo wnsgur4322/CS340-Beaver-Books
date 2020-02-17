@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css" href="css/owl.carousel.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
-
 <body>
     <header>
         <div class="main-menu">
@@ -24,7 +23,7 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
-                            <li class="navbar-item">
+                            <li class="navbar-item active">
                                 <a href="admin.html" class="nav-link">Admin</a>
                             </li>
                             <li class="navbar-item">
@@ -33,7 +32,7 @@
                             <li class="navbar-item">
                                 <a href="shop.html" class="nav-link">Shop</a>
                             </li>
-                            <li class="navbar-item active">
+                            <li class="navbar-item">
                                 <a href="about.html" class="nav-link">About</a>
                             </li>
                             <li class="navbar-item">
@@ -49,22 +48,89 @@
             </div>
         </div>
     </header>
+    
     <div class="breadcrumb">
         <div class="container">
             <a class="breadcrumb-item" href="index.html">Home</a>
-            <span class="breadcrumb-item active">About</span>
+            <span class="breadcrumb-item active">Admin</span>
         </div>
     </div>
-    <section class="static about-sec">
-        <div class="container">
-            <h1>About Us</h1>
-            <div class="img-sec">
-                <img src="images/benny1.jpg" alt="about">
-                <p>this doesn't have meaning, dummy text. 의미 없음. sin significado. 意味なし</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </div>
-        </div>
-    </section>
+
+    <div>
+        <h1 style="padding-bottom: 10px; font-size: 30px;">Available Books</h1>
+        <p class="btn" style="align-content: center; margin-left: 1290px;" align="center">add books</p>
+    <table style="width:50%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
+        <tr>
+          <th>isbn</th>
+          <th>title</th>
+          <th>author_id</th>
+          <th>publisher_id</th>
+          <th>price</th>
+          <th>year</th>
+          <th style="width: 10px;">remove</th>
+        </tr>
+        <tr>
+          <td>9090</td>                     <!-- ISBN -->
+          <td>To Kill a Mockingbird</td>    <!-- Title -->
+          <td>0</td>                        <!-- Author_id -->
+          <td>1</td>                        <!-- Publisher_id -->
+          <td>5.49</td>                     <!-- price -->
+          <td>1960</td>                     <!-- year -->
+          <td class="btn">remove</td>     
+        </tr>
+        <tr>
+          <td>9091</td>
+          <td>To Kill a Mockingbird 2</td>
+          <td>0</td>
+          <td>1</td>
+          <td>6.49</td>
+          <td>1970</td>
+          <td class="btn">remove</td>
+        </tr>
+        <tr>
+            <td>9092</td>
+            <td>To Kill a Mockingbird 3</td>
+            <td>0</td>
+            <td>1</td>
+            <td>7.49</td>
+            <td>1980</td>
+            <td class="btn">remove</td>
+          </tr>
+      </table>
+
+      <h1 style="padding-bottom: 10px; font-size: 30px;">User List</h1>
+  <table style="width:50%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
+      <tr>
+        <th>email</th>
+        <th>order_id</th>
+        <th>last_name</th>
+        <th>first_name</th>
+        <th>address</th>
+        <th>password</th>
+        <th style="width: 10px;">remove</th>
+      </tr>
+      <tr>
+        <td>benny@oregonstate.edu</td>                        <!-- email -->
+        <td>0</td>                                            <!-- order_id -->
+        <td>Beaver</td>                                       <!-- last_name -->
+        <td>Benny</td>                                        <!-- first_name -->
+        <td>1234 NW Corvallis Avenue, Corvallis, Oregon</td>  <!-- address -->
+        <td>gobeavs</td>                                      <!-- password -->
+        <td class="btn">remove</td>     
+      </tr>
+      <tr>
+        <td>duck@uoregon.edu</td>
+        <td>1</td>
+        <td>Duck</td>
+        <td>Puddles</td>
+        <td>5678 SW Eugene Avenue, Eugene, Oregon</td>
+        <td>goducks</td>
+        <td class="btn">remove</td>
+      </tr>
+    </table>
+    </div>
+
+
 
     <footer>
         <div class="container">
@@ -103,5 +169,3 @@
     <script type="text/javascript" src="js/owl.carousel.min.js"></script>
     <script src="js/custom.js"></script>
 </body>
-
-</html>
