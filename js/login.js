@@ -23,6 +23,7 @@ function redirect(){
     if(redirect_true == 1){
        
       //window.open(document.getElementById('userid').value); <- for interaction with js node
+      alert("login successful with admin account");
       window.open("http://web.engr.oregonstate.edu/~jeongju/beaver-books/index.html");
       redirect()
     }
