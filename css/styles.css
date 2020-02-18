@@ -1,3 +1,15 @@
+.shop_searchbox {
+  margin-left: 100px;
+  margin-top: 50px;
+  font-size: large;
+  display: flex;
+  align-items: flex-end;
+}
+
+.shop_label {
+  margin-right: 10px;
+}
+
 .books {
   margin: 50px;
   padding: 50px;
