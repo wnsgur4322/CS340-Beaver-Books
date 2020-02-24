@@ -1,35 +1,176 @@
--- Project Step 4 Draft Version: DML and DDL Queries
--- Author: Junhyeok Jeong
+-- phpMyAdmin SQL Dump
+-- version 4.9.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: classmysql.engr.oregonstate.edu:3306
+-- Generation Time: Feb 23, 2020 at 04:03 PM
+-- Server version: 10.4.11-MariaDB-log
+-- PHP Version: 7.0.33
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `cs340_jeongju`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `authors`
+--
+
+DROP TABLE IF EXISTS `authors`;
+CREATE TABLE `authors` (
+  `author_id` int(11) UNSIGNED NOT NULL,
+  `isbn` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `first_name` varchar(45) NOT NULL,
+  `last_name` varchar(45) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `authors`
+--
+
+INSERT INTO `authors` (`author_id`, `isbn`, `first_name`, `last_name`, `address`, `url`) VALUES
+(1, 0060935464, 'Harper', 'Lee', '195 Broadway Floor 22, New York, NY 10007 USA', 'https://www.biography.com/writer/harper-lee'),
+(2, 0060934344, 'Miguel De', 'Cervantes', 'Madrid, Spain', 'https://www.biography.com/writer/miguel-de-cervantes'),
+(3, 1684052084, 'Joe', 'Caramagna', NULL, 'https://marvel.fandom.com/wiki/Joe_Caramagna_(Earth-1218)'),
+(4, 1684052084, 'Joey', 'Cavalieri', NULL, 'https://sva.edu/faculty/joey-cavalieri');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `books`
+--
+
+DROP TABLE IF EXISTS `books`;
+CREATE TABLE `books` (
+  `order_id` int(11) UNSIGNED NOT NULL,
+  `isbn` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `author_id` int(11) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `price` decimal(4,2) NOT NULL,
+  `publisher_id` int(11) UNSIGNED NOT NULL,
+  `year` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `books`
+--
+
+INSERT INTO `books` (`order_id`, `isbn`, `author_id`, `title`, `price`, `publisher_id`, `year`) VALUES
+(1, 0060934344, 2, 'Don Quixote', '21.03', 2, 1605),
+(1, 0060935464, 1, 'To Kill a Mockingbird', '17.30', 1, 1960),
+(2, 1684052084, 3, 'DuckTales: Treasure Trove', '8.26', 3, 2018);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `books_authors`
+--
+
+DROP TABLE IF EXISTS `books_authors`;
+CREATE TABLE `books_authors` (
+  `isbn` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `author_id` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `books_authors`
+--
+
+INSERT INTO `books_authors` (`isbn`, `author_id`) VALUES
+(0060935464, 1),
+(0060934344, 2),
+(1684052084, 3),
+(1684052084, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `books_shopping_carts`
+--
+
+DROP TABLE IF EXISTS `books_shopping_carts`;
+CREATE TABLE `books_shopping_carts` (
+  `isbn` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `order_id` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `books_shopping_carts`
+--
+
+INSERT INTO `books_shopping_carts` (`isbn`, `order_id`) VALUES
+(0060935464, 1),
+(0060934344, 1),
+(1684052084, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `publishers`
+--
+
+DROP TABLE IF EXISTS `publishers`;
+CREATE TABLE `publishers` (
+  `publisher_id` int(11) UNSIGNED NOT NULL,
+  `company_name` varchar(45) NOT NULL,
+  `contact` varchar(255) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `publishers`
+--
+
+INSERT INTO `publishers` (`publisher_id`, `company_name`, `contact`, `address`, `url`) VALUES
+(1, 'J. B. Lippincott & Co.', '(215) 732-6200', '227 S. 6th Street, Philadelphia, PA 19106 USA', NULL),
+(2, 'Ecco Press', '(212) 207-7000', '195 Broadway, New York, NY 10007 USA', 'https://www.harpercollins.com/corporate/customer-service/contact-us/'),
+(3, 'IDW Publishing', 'info@idwpublishing.com', '2765 Truxtun Road, San Diego, CA 92106 USA', 'https://www.idwpublishing.com/contact/');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `shopping_carts`
 --
 
 DROP TABLE IF EXISTS `shopping_carts`;
-
 CREATE TABLE `shopping_carts` (
-  `order_id` int(11) NOT NULL,
-  `date` timestamp NOT NULL,
-  `count` int(255) NOT NULL
+  `order_id` int(11) UNSIGNED NOT NULL,
+  `count` int(255) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `shopping_carts`
 --
 
+INSERT INTO `shopping_carts` (`order_id`, `count`, `date`) VALUES
+(1, 2, '2020-02-15 21:03:42'),
+(2, 1, '2020-02-16 23:05:12');
 
-INSERT INTO `shopping_carts` VALUES
-	(123,'2020-02-15 13:03:42',2),
-	(124,'2020-02-16 15:05:12',1);
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `users`
 --
 
 DROP TABLE IF EXISTS `users`;
-
 CREATE TABLE `users` (
-  `order_id` int(11) NOT NULL,
+  `order_id` int(11) UNSIGNED NOT NULL,
   `email` varchar(255) NOT NULL,
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
@@ -41,86 +182,123 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-
-INSERT INTO `users` VALUES
-	(123,'benny@oregonstate.edu','Benny','Beaver','1234 NW Corvallis Avenue, Corvallis, Oregon','gobeavs'),
-	(124,'duck@uoregon.edu','Puddles','Duck','5678 SW Eugene Avenue, Eugene, Oregon','goducks');
-
+INSERT INTO `users` (`order_id`, `email`, `first_name`, `last_name`, `address`, `password`) VALUES
+(1, 'benny@oregonstate.edu', 'Benny', 'Beaver', '1234 NW Corvallis Avenue, Corvallis, Oregon', 'gobeavs'),
+(2, 'duck@uoregon.edu', 'Puddles', 'Duck', '5678 SW Eugene Avenue, Eugene, Oregon', 'goducks');
 
 --
--- Table structure for table `books`
+-- Indexes for dumped tables
 --
 
-DROP TABLE IF EXISTS `books`;
-
-CREATE TABLE `books` (
-  `order_id` int(11) NOT NULL,
-  `isbn` int(11) NOT NULL,
-  `author_id` smallint(5) unsigned NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `price` decimal(4,2) NOT NULL,
-  `publisher_id` smallint(5) unsigned NOT NULL,
-  `year` year(4) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+-- Indexes for table `authors`
+--
+ALTER TABLE `authors`
+  ADD PRIMARY KEY (`author_id`),
+  ADD KEY `isbn` (`isbn`);
 
 --
--- Dumping data for table `books`
+-- Indexes for table `books`
 --
-
-INSERT INTO `books` VALUES
-	(123,0060935464,1,'To Kill a Mockingbird',17.30,1,1960),
-  (123,0060934344,2,'Don Quixote',21.03,2,1605),
-  (124,1684052084,3,'DuckTales: Treasure Trove',8.26,3,2018);
-
-
---
--- Table structure for table `authors`
---
-
-DROP TABLE IF EXISTS `authors`;
-
-CREATE TABLE `authors` (
-  `author_id` int(11) NOT NULL,
-  `isbn` int(11) NOT NULL,
-  `first_name` varchar(45) NOT NULL,
-  `last_name` varchar(45) NOT NULL,
-  `address` varchar(255),
-  `url` varchar(255)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `books`
+  ADD PRIMARY KEY (`isbn`),
+  ADD KEY `publisher_id` (`publisher_id`),
+  ADD KEY `author_id` (`author_id`),
+  ADD KEY `order_id` (`order_id`);
 
 --
--- Dumping data for table `authors`
+-- Indexes for table `books_authors`
 --
-
-INSERT INTO `authors` VALUES
-	(1,0060935464,'Harper','Lee','195 Broadway Floor 22, New York, NY 10007 USA', 'https://www.biography.com/writer/harper-lee'),
-	(2,0060934344,'Miguel De','Cervantes','Madrid, Spain','https://www.biography.com/writer/miguel-de-cervantes'),
-  (3,1684052084,'Joe','Caramagna',NULL,'https://marvel.fandom.com/wiki/Joe_Caramagna_(Earth-1218)');
+ALTER TABLE `books_authors`
+  ADD KEY `isbn` (`isbn`),
+  ADD KEY `author_id` (`author_id`);
 
 --
--- Table structure for table `publishers`
+-- Indexes for table `books_shopping_carts`
 --
-
-DROP TABLE IF EXISTS `publishers`;
-
-CREATE TABLE `publishers` (
-  `publisher_id` int(11) NOT NULL,
-  `isbn` int(11) NOT NULL,
-  `company_name` varchar(45) NOT NULL,
-  `contact` varchar(255) NOT NULL,
-  `address` varchar(255),
-  `url` varchar(255)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `books_shopping_carts`
+  ADD KEY `isbn` (`isbn`),
+  ADD KEY `order_id` (`order_id`);
 
 --
--- Dumping data for table `publishers`
+-- Indexes for table `publishers`
 --
+ALTER TABLE `publishers`
+  ADD PRIMARY KEY (`publisher_id`);
 
-INSERT INTO `publishers` VALUES
-	(1,0060935464,'J. B. Lippincott & Co.','(215) 732-6200','227 S. 6th Street, Philadelphia, PA 19106 USA', NULL),
-	(2,0060934344,'Ecco Press','(212) 207-7000','195 Broadway, New York, NY 10007 USA','https://www.harpercollins.com/corporate/customer-service/contact-us/'),
-  (3,1684052084,'IDW Publishing','info@idwpublishing.com','2765 Truxtun Road, San Diego, CA 92106 USA','https://www.idwpublishing.com/contact/');
-
--- Index
+--
+-- Indexes for table `shopping_carts`
+--
 ALTER TABLE `shopping_carts`
   ADD PRIMARY KEY (`order_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD KEY `order_id` (`order_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `authors`
+--
+ALTER TABLE `authors`
+  MODIFY `author_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `publishers`
+--
+ALTER TABLE `publishers`
+  MODIFY `publisher_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `shopping_carts`
+--
+ALTER TABLE `shopping_carts`
+  MODIFY `order_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `authors`
+--
+ALTER TABLE `authors`
+  ADD CONSTRAINT `authors_ibfk_1` FOREIGN KEY (`isbn`) REFERENCES `books` (`isbn`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `books`
+--
+ALTER TABLE `books`
+  ADD CONSTRAINT `books_ibfk_1` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`publisher_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `books_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `authors` (`author_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `books_ibfk_3` FOREIGN KEY (`order_id`) REFERENCES `shopping_carts` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `books_authors`
+--
+ALTER TABLE `books_authors`
+  ADD CONSTRAINT `books_authors_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `authors` (`author_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `books_authors_ibfk_2` FOREIGN KEY (`isbn`) REFERENCES `books` (`isbn`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `books_shopping_carts`
+--
+ALTER TABLE `books_shopping_carts`
+  ADD CONSTRAINT `books_shopping_carts_ibfk_1` FOREIGN KEY (`isbn`) REFERENCES `books` (`isbn`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `books_shopping_carts_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `shopping_carts` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `shopping_carts` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
