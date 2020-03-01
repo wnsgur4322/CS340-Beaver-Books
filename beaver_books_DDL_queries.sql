@@ -115,7 +115,8 @@ CREATE TABLE `books_shopping_carts` (
 INSERT INTO `books_shopping_carts` (`isbn`, `order_id`) VALUES
 (0060935464, 1),
 (0060934344, 1),
-(1684052084, 2);
+(1684052084, 2),
+(1684052084, 3);
 
 -- --------------------------------------------------------
 
@@ -160,7 +161,8 @@ CREATE TABLE `shopping_carts` (
 
 INSERT INTO `shopping_carts` (`order_id`, `count`, `date`) VALUES
 (1, 2, '2020-02-15 21:03:42'),
-(2, 1, '2020-02-16 23:05:12');
+(2, 1, '2020-02-16 23:05:12'),
+(3, 1, '2020-02-25 08:05:15');
 
 -- --------------------------------------------------------
 
@@ -184,7 +186,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`order_id`, `email`, `first_name`, `last_name`, `address`, `password`) VALUES
 (1, 'benny@oregonstate.edu', 'Benny', 'Beaver', '1234 NW Corvallis Avenue, Corvallis, Oregon', 'gobeavs'),
-(2, 'duck@uoregon.edu', 'Puddles', 'Duck', '5678 SW Eugene Avenue, Eugene, Oregon', 'goducks');
+(2, 'duck@uoregon.edu', 'Puddles', 'Duck', '5678 SW Eugene Avenue, Eugene, Oregon', 'goducks'),
+(3, 'kimchi@gmail', 'Taco', 'Kimchi', 'Super admin acccount', 'taco');
 
 --
 -- Indexes for dumped tables
