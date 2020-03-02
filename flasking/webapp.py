@@ -90,8 +90,31 @@ def login():
     print("Fetching and rendering login web page")
     return render_template('login.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
-@webapp.route('/register.html')
+@webapp.route('/register.html', methods=['POST', 'GET'])
 def register():
+    db_connection = connect_to_database()
+    query = "SELECT order_id FROM users;"
+    result = execute_query(db_connection, query).fetchall()
+    print(result, len(result))
+    order_id = len(result) + 1
+
+    if request.method =='POST':
+        print("add new account !")
+        input_first_name = request.form['first_name']
+        input_last_name = request.form['last_name']
+        input_email = request.form['email']
+        input_password = request.form['password']
+        input_repeat_password = request.form['repeat_password']
+        input_address = request.form['address']
+        print("user inputted: {0}, {1}, {2}, {3}, {4}, {5}".format(input_first_name, input_last_name, input_email, input_password, input_repeat_password, input_address))
+
+        query2 = 'INSERT INTO users (order_id, email, first_name, last_name, address, password) VALUES (%d,%s,%s,%s,%s,%s)'
+        data = (order_id, input_email, input_first_name, input_last_name, input_address, input_password)
+        execute_query(db_connection, query2, data)
+        flash("your account information is added successfully !")
+        return redirect(url_for('login'))
+
+
     print("Fetching and rendering register web page")
     return render_template('register.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
