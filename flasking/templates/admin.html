@@ -26,6 +26,17 @@
 </head>
 <body>
     <header>
+        <div class="container" style="min-height:100% width:80%">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
         <div class="main-menu">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light">
@@ -39,7 +50,7 @@
                                 <a href="admin.html" class="nav-link">Admin</a>
                             </li>
                             <li class="navbar-item">
-                                <a href="/" class="nav-link">Home</a>
+                                <a href="index.html" class="nav-link">Home</a>
                             </li>
                             <li class="navbar-item">
                                 <a href="shop.html" class="nav-link">Shop</a>
@@ -64,16 +75,15 @@
     <div class="breadcrumb">
         <div class="container">
             <a class="breadcrumb-item" href="index.html">Home</a>
-            <span class="breadcrumb-item active">Admin</span>
+            <span class="breadcrumb-item active" style="font-weight: bold;">Admin</span>
         </div>
     </div>
 
     <div>
         <h1 style="padding-bottom: 10px; font-size: 30px;">Available Books</h1>
-        <p class="btn black" style="align-content: center; margin-left: 1290px;" align="center">add books</p>
+        <p class="btn black" style="align-content: center; margin-left: 1290px;" align="center" onclick="window.location = 'add_new_books.html'">add books</p>
     <table style="width:50%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
         <tr>
-          <th>order_id</th>
           <th>isbn</th>
           <th>author_id</th>
           <th>title</th>
@@ -90,7 +100,6 @@
               <td> {{ r[3] }}</td>
               <td> {{ r[4] }}</td>
               <td> {{ r[5] }}</td>
-              <td> {{ r[6] }}</td>
               <td> <input class="btn black" name='delete' value="delete" style="width: 100px;" onclick="window.location = '/update_people/{{r[4]}}'"></td>
             </tr>
             {% endfor %}
@@ -99,7 +108,7 @@
       <h1 style="padding-bottom: 10px; font-size: 30px;">User List</h1>
   <table style="width:50%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
       <tr>
-        <th>order_id</th>
+        <th>user_id</th>
         <th>email</th>
         <th>first_name</th>
         <th>last_name</th>
@@ -115,7 +124,7 @@
       <td> {{ r[3] }}</td>
       <td> {{ r[4] }}</td>
       <td> {{ r[5] }}</td>
-      <td> <input class="btn black" name='delete' value="delete" style="width: 100px;" onclick="window.location = '/update_people/{{r[4]}}'"></td>
+      <td> <input class="btn black" name='delete' value="delete" style="width: 100px;" onclick="window.location = '/update_user/{{r[4]}}'"></td>
     </tr>
     {% endfor %}
       </tr>

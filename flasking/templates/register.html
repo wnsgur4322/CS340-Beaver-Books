@@ -44,15 +44,15 @@
     <div class="breadcrumb">
         <div class="container">
             <a class="breadcrumb-item" href="login.html">Login</a>
-            <span class="breadcrumb-item active">Register</span>
+            <span class="breadcrumb-item active" style="font-weight: bold;">Register</span>
         </div>
     </div>
     <section class="static about-sec">
         <div class="container">
-            <h1>My Account / REgister</h1>
+            <h1>My Account / Register</h1>
             <p></p>
             <div class="form">
-                <form>
+                <form action="{{ url_for('register') }}" method="post">
                     <div class="row">
                         <p style= "font-weight: bold; margin-right: 31.45px;">Name</p>
                         <div class="col-md-4"> 

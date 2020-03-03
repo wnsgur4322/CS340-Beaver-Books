@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    {% block styles %}
     <meta charset="UTF-8">
     <title>Beaver Books</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,15 +12,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/owl.carousel.min.css">
     <link rel="stylesheet" href="css/styles.css">
-     <!-- deploy python flask-->
-     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/owl.carousel.min.css') }}">
-     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-     <link href='https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900' rel='stylesheet' type="text/css">
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-     <link rel="stylesheet" href="{{ font_url1 }}">
-     <link rel="stylesheet" href="{{ font_url2 }}">
+ <!-- deploy python flask-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/fontawesome.min.css') }}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900' rel='stylesheet' type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="{{ font_url1 }}">
+    <link rel="stylesheet" href="{{ font_url2 }}">
+    {% endblock %}
 </head>
+
 <body>
     <header>
         <div class="main-menu">
@@ -31,7 +35,7 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
-                            <li class="navbar-item">
+                            <li class="navbar-item active">
                                 <a href="admin.html" class="nav-link">Admin</a>
                             </li>
                             <li class="navbar-item">
@@ -40,10 +44,10 @@
                             <li class="navbar-item">
                                 <a href="shop.html" class="nav-link">Shop</a>
                             </li>
-                            <li class="navbar-item">
+                            <li class="navbar-item"> 
                                 <a href="about.html" class="nav-link">About</a>
                             </li>
-                            <li class="navbar-item active">
+                            <li class="navbar-item">
                                 <a href="shopping_cart.html" class="fa fa-shopping-cart"></a>
                             </li>
                         </ul>
@@ -56,44 +60,45 @@
             </div>
         </div>
     </header>
+
     <div class="breadcrumb">
         <div class="container">
             <a class="breadcrumb-item" href="index.html">Home</a>
-            <span class="breadcrumb-item active">Shopping cart</span>
+            <a class="breadcrumb-item" href="admin.html">Admin</a>
+            <span class="breadcrumb-item active" style="font-weight: bold;">Add new book</span>
         </div>
     </div>
-    <div>
-        <h1>Shopping Cart</h1>
-        <section id="total_books">
-            <div>
-                <b>User ID: 1</b>
-            </div>
-            <div>
-                <b>Total Books: 2</b>
-            </div>
-            <div>
-                <b>Total Price: $26.52</b>
-            </div>
-        </section>
-        <section class="books">
-            <div>
-                <img src="{{url_for('static', filename='images/mockingbird1.jpg')}}" alt="To Kill a Mockingbird" height="400" width="200">
-                <p><b>To Kill a Mockingbird</b></p>
-                <p>ISBN: 0060935464</p>
-                <p>Price: $5.49</p>
-                <button type="button" class="btn">Remove</button>
-            </div>
-        </section>
-        <section class="books">
-            <div>
-                <img src="{{url_for('static', filename='images/don quixote.jpg')}}" alt="Don Quixote" height="400" width="200">
-                <p><b>Title: Don Quixote</b></p>
-                <p>ISBN: 0060934344</p>
-                <p>Price: $21.03</p>
-                <button type="button" class="btn">Remove</button>
-            </div>
-        </section>
+    <section class="static about-sec">
+    <div class="container">
+    <h3 style="color: black;">Add new book</h3>
+    <form class="center" id="addbook" action="{{ url_for('add_new_books') }}" method="post">
+        <div class="col-md-6" style="padding-bottom: 10px;">isbn: <input type="number" name="isbn"></div>
+        <div class="col-md-6" style="padding-bottom: 10px;">title: <input type="text" name="title"></div>
+        <div class="col-md-6" style="padding-bottom: 10px;">price: <input type="text" name="price"></div>
+        <div class="col-md-6" style="padding-bottom: 10px;">year: <input type="number" name="year"></div>
+        <div class="col-md-6" style="padding-bottom: 10px;">author: <select name="author_id">
+	<!-- display all planets inside this dropdown -->
+        {% for a in authors %}
+          <option value="{{ a[0] }}">{{ a[1] }} {{ a[2] }}</option>
+        {% endfor %}
+    </select>
+        </div>
+        <div class="col-md-6" style="padding-bottom: 10px;">publisher: <select name="publisher_id">
+    <!-- display all planets inside this dropdown -->
+        {% for p in publishers %}
+          <option value="{{ p[0] }}">{{ p[1] }} {{ p[2] }}</option>
+        {% endfor %}
+    </select>
+        </div>
+    <input class="btn black" type="submit" value="Submit">
+    </form>
     </div>
+</section>
+
+
+
+
+
     <footer>
         <div class="container">
             <div class="row">
@@ -126,16 +131,18 @@
             </div>
         </div>
     </footer>
+    {% block scripts %}
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/owl.carousel.min.js"></script>
     <script src="js/custom.js"></script>
+
     <!-- deploy python flask-->
 
     <script src="{{url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{url_for('static', filename='js/owl.carousel.min.js') }}" type=text/javascript></script>
+    <script type=text/javascript src="{{url_for('static', filename='js/owl.carousel.min.js') }}"></script>
     <script src="{{url_for('static', filename='js/custom.js') }}"></script>
+    {% endblock %}
 </body>
-
-</html> 
+</html>

@@ -10,20 +10,50 @@ Bootstrap(webapp)
 webapp.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
-@webapp.route('/admin.html')
+@webapp.route('/admin.html', methods=['POST', 'GET'])
 #the name of this function is just a cosmetic thing
 def admin():
     print("Fetching and rendering admin web page")
     db_connection = connect_to_database()
     # load books table from DB
     query = "SELECT * FROM books;"
-    result = execute_query(db_connection, query).fetchall();
+    result = execute_query(db_connection, query).fetchall()
     
     # load users table from DB
     query2 = "SELECT * FROM users;"
-    result2 = execute_query(db_connection, query2).fetchall();
+    result2 = execute_query(db_connection, query2).fetchall()
     print(result)
     return render_template('admin.html', rows=result, rows2=result2, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+
+@webapp.route('/add_new_books.html', methods=['POST','GET'])
+def add_new_books():
+    print("Add new books!\n")
+    db_connection = connect_to_database()
+    if request.method == 'GET':
+        print("get GET \n")
+        query = 'SELECT author_id, first_name, last_name from authors'
+        result = execute_query(db_connection, query).fetchall()
+        print(result)
+        query2 = 'SELECT publisher_id, company_name from publishers'
+        result2 = execute_query(db_connection, query2).fetchall()
+
+        return render_template('add_new_books.html', authors = result, publishers = result2, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    
+    elif request.method == 'POST':
+        print("take user inputs for adding a new book! \n")
+        isbn = request.form['isbn']
+        title = request.form['title']
+        price = request.form['price']
+        year = request.form['year']
+        author_id = request.form['author_id']
+        publisher_id = request.form['publisher_id']
+
+        query3 = 'INSERT INTO books (isbn, author_id, title, price, publisher_id, year) VALUES (%s,%s,%s,%s,%s,%s)'
+        data = (isbn, author_id, title, price, publisher_id, year)
+        execute_query(db_connection, query3, data)
+        flash("You have successfully added new book on the booklist!")
+        return redirect(url_for('admin'))
+
 
 @webapp.route('/about.html')
 def about():
@@ -46,8 +76,17 @@ def shopping_cart_normal():
     print("Fetching and rendering shopping_cart web page")
     return render_template('shopping_cart_normal.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
-@webapp.route('/shop.html')
+@webapp.route('/shop.html', methods=['POST', 'GET'])
 def shop():
+    db_connection = connect_to_database()
+    if request == 'GET':
+        print("get GET ! \n")
+        query = 'SELECT isbn, title, price, year from books;'
+        result = execute_query(db_connection, query).fetchall()
+
+        return render_template('shop.html', books = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+
+
     print("Fetching and rendering shop web page")
     return render_template('shop.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
@@ -93,10 +132,9 @@ def login():
 @webapp.route('/register.html', methods=['POST', 'GET'])
 def register():
     db_connection = connect_to_database()
-    query = "SELECT order_id FROM users;"
+    query = "SELECT user_id FROM users;"
     result = execute_query(db_connection, query).fetchall()
     print(result, len(result))
-    order_id = len(result) + 1
 
     if request.method =='POST':
         print("add new account !")
@@ -108,11 +146,15 @@ def register():
         input_address = request.form['address']
         print("user inputted: {0}, {1}, {2}, {3}, {4}, {5}".format(input_first_name, input_last_name, input_email, input_password, input_repeat_password, input_address))
 
-        query2 = 'INSERT INTO users (order_id, email, first_name, last_name, address, password) VALUES (%d,%s,%s,%s,%s,%s)'
-        data = (order_id, input_email, input_first_name, input_last_name, input_address, input_password)
-        execute_query(db_connection, query2, data)
-        flash("your account information is added successfully !")
-        return redirect(url_for('login'))
+        if input_password == input_repeat_password:
+            query3 = 'INSERT INTO users (email, first_name, last_name, address, password) VALUES (%s,%s,%s,%s,%s)'
+            data2 = (input_email, input_first_name, input_last_name, input_address, input_password)
+            execute_query(db_connection, query3, data2)
+            flash("Welcome! You have successfully signed up on BEAVER BOOKS!")
+            return redirect(url_for('register'))
+        else:
+            flash("Your password and confirm password are not the same! Please check it !")
+            return redirect(url_for('register'))
 
 
     print("Fetching and rendering register web page")
