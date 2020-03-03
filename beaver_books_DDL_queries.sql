@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: classmysql.engr.oregonstate.edu:3306
--- Generation Time: Feb 23, 2020 at 04:03 PM
+-- Generation Time: Mar 02, 2020 at 06:53 PM
 -- Server version: 10.4.11-MariaDB-log
 -- PHP Version: 7.0.33
 
@@ -56,11 +56,10 @@ INSERT INTO `authors` (`author_id`, `isbn`, `first_name`, `last_name`, `address`
 
 DROP TABLE IF EXISTS `books`;
 CREATE TABLE `books` (
-  `order_id` int(11) UNSIGNED NOT NULL,
   `isbn` int(10) UNSIGNED ZEROFILL NOT NULL,
   `author_id` int(11) UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
-  `price` decimal(4,2) NOT NULL,
+  `price` decimal(8,2) NOT NULL,
   `publisher_id` int(11) UNSIGNED NOT NULL,
   `year` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -69,10 +68,10 @@ CREATE TABLE `books` (
 -- Dumping data for table `books`
 --
 
-INSERT INTO `books` (`order_id`, `isbn`, `author_id`, `title`, `price`, `publisher_id`, `year`) VALUES
-(1, 0060934344, 2, 'Don Quixote', '21.03', 2, 1605),
-(1, 0060935464, 1, 'To Kill a Mockingbird', '17.30', 1, 1960),
-(2, 1684052084, 3, 'DuckTales: Treasure Trove', '8.26', 3, 2018);
+INSERT INTO `books` (`isbn`, `author_id`, `title`, `price`, `publisher_id`, `year`) VALUES
+(0060934344, 2, 'Don Quixote', '21.03', 2, 1605),
+(0060935464, 1, 'To Kill a Mockingbird', '17.30', 1, 1960),
+(1684052084, 3, 'DuckTales: Treasure Trove', '8.26', 3, 2018);
 
 -- --------------------------------------------------------
 
@@ -95,28 +94,6 @@ INSERT INTO `books_authors` (`isbn`, `author_id`) VALUES
 (0060934344, 2),
 (1684052084, 3),
 (1684052084, 4);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `books_shopping_carts`
---
-
-DROP TABLE IF EXISTS `books_shopping_carts`;
-CREATE TABLE `books_shopping_carts` (
-  `isbn` int(10) UNSIGNED ZEROFILL NOT NULL,
-  `order_id` int(11) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `books_shopping_carts`
---
-
-INSERT INTO `books_shopping_carts` (`isbn`, `order_id`) VALUES
-(0060935464, 1),
-(0060934344, 1),
-(1684052084, 2),
-(1684052084, 3);
 
 -- --------------------------------------------------------
 
@@ -150,8 +127,8 @@ INSERT INTO `publishers` (`publisher_id`, `company_name`, `contact`, `address`, 
 
 DROP TABLE IF EXISTS `shopping_carts`;
 CREATE TABLE `shopping_carts` (
-  `order_id` int(11) UNSIGNED NOT NULL,
-  `count` int(255) NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `isbn` int(10) UNSIGNED ZEROFILL NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -159,10 +136,11 @@ CREATE TABLE `shopping_carts` (
 -- Dumping data for table `shopping_carts`
 --
 
-INSERT INTO `shopping_carts` (`order_id`, `count`, `date`) VALUES
-(1, 2, '2020-02-15 21:03:42'),
-(2, 1, '2020-02-16 23:05:12'),
-(3, 1, '2020-02-25 08:05:15');
+INSERT INTO `shopping_carts` (`user_id`, `isbn`, `date`) VALUES
+(1, 0060935464, '2020-02-15 21:03:42'),
+(1, 0060934344, '2020-02-15 21:05:22'),
+(2, 1684052084, '2020-02-16 23:05:12'),
+(3, 1684052084, '2020-02-25 08:05:15');
 
 -- --------------------------------------------------------
 
@@ -172,7 +150,7 @@ INSERT INTO `shopping_carts` (`order_id`, `count`, `date`) VALUES
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `order_id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
   `email` varchar(255) NOT NULL,
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
@@ -184,7 +162,7 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`order_id`, `email`, `first_name`, `last_name`, `address`, `password`) VALUES
+INSERT INTO `users` (`user_id`, `email`, `first_name`, `last_name`, `address`, `password`) VALUES
 (1, 'benny@oregonstate.edu', 'Benny', 'Beaver', '1234 NW Corvallis Avenue, Corvallis, Oregon', 'gobeavs'),
 (2, 'duck@uoregon.edu', 'Puddles', 'Duck', '5678 SW Eugene Avenue, Eugene, Oregon', 'goducks'),
 (3, 'kimchi@gmail', 'Taco', 'Kimchi', 'Super admin acccount', 'taco');
@@ -205,9 +183,8 @@ ALTER TABLE `authors`
 --
 ALTER TABLE `books`
   ADD PRIMARY KEY (`isbn`),
-  ADD KEY `publisher_id` (`publisher_id`),
   ADD KEY `author_id` (`author_id`),
-  ADD KEY `order_id` (`order_id`);
+  ADD KEY `publisher_id` (`publisher_id`);
 
 --
 -- Indexes for table `books_authors`
@@ -215,13 +192,6 @@ ALTER TABLE `books`
 ALTER TABLE `books_authors`
   ADD KEY `isbn` (`isbn`),
   ADD KEY `author_id` (`author_id`);
-
---
--- Indexes for table `books_shopping_carts`
---
-ALTER TABLE `books_shopping_carts`
-  ADD KEY `isbn` (`isbn`),
-  ADD KEY `order_id` (`order_id`);
 
 --
 -- Indexes for table `publishers`
@@ -233,53 +203,34 @@ ALTER TABLE `publishers`
 -- Indexes for table `shopping_carts`
 --
 ALTER TABLE `shopping_carts`
-  ADD PRIMARY KEY (`order_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `isbn` (`isbn`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD KEY `order_id` (`order_id`);
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `authors`
+-- AUTO_INCREMENT for table `users`
 --
-ALTER TABLE `authors`
-  MODIFY `author_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `publishers`
---
-ALTER TABLE `publishers`
-  MODIFY `publisher_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `shopping_carts`
---
-ALTER TABLE `shopping_carts`
-  MODIFY `order_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `authors`
---
-ALTER TABLE `authors`
-  ADD CONSTRAINT `authors_ibfk_1` FOREIGN KEY (`isbn`) REFERENCES `books` (`isbn`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `books`
 --
 ALTER TABLE `books`
-  ADD CONSTRAINT `books_ibfk_1` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`publisher_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `books_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `authors` (`author_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `books_ibfk_3` FOREIGN KEY (`order_id`) REFERENCES `shopping_carts` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `books_ibfk_1` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`publisher_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `books_authors`
@@ -289,17 +240,11 @@ ALTER TABLE `books_authors`
   ADD CONSTRAINT `books_authors_ibfk_2` FOREIGN KEY (`isbn`) REFERENCES `books` (`isbn`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `books_shopping_carts`
+-- Constraints for table `shopping_carts`
 --
-ALTER TABLE `books_shopping_carts`
-  ADD CONSTRAINT `books_shopping_carts_ibfk_1` FOREIGN KEY (`isbn`) REFERENCES `books` (`isbn`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `books_shopping_carts_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `shopping_carts` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `users`
---
-ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `shopping_carts` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `shopping_carts`
+  ADD CONSTRAINT `shopping_carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `shopping_carts_ibfk_2` FOREIGN KEY (`isbn`) REFERENCES `books` (`isbn`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
