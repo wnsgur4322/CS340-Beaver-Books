@@ -9,6 +9,13 @@ webapp = Flask(__name__, static_folder='static', static_url_path='/static')
 Bootstrap(webapp)
 webapp.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+@webapp.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html', title = '404'), 404
+
+@webapp.errorhandler(500)
+def internal_server_error(error):
+    return render_template('500.html', title = '500'), 500
 
 @webapp.route('/admin.html', methods=['POST', 'GET'])
 #the name of this function is just a cosmetic thing
@@ -29,6 +36,8 @@ def admin():
 def add_new_books():
     print("Add new books!\n")
     db_connection = connect_to_database()
+    booklist_len = 0
+
     if request.method == 'GET':
         print("get GET \n")
         query = 'SELECT author_id, first_name, last_name from authors'
@@ -36,6 +45,10 @@ def add_new_books():
         print(result)
         query2 = 'SELECT publisher_id, company_name from publishers'
         result2 = execute_query(db_connection, query2).fetchall()
+
+        query5 = 'SELECT isbn from books'
+        result4 = execute_query(db_connection, query5).fetchall()
+        booklist_len = len(result4)
 
         return render_template('add_new_books.html', authors = result, publishers = result2, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
     
@@ -51,7 +64,12 @@ def add_new_books():
         query3 = 'INSERT INTO books (isbn, author_id, title, price, publisher_id, year) VALUES (%s,%s,%s,%s,%s,%s)'
         data = (isbn, author_id, title, price, publisher_id, year)
         execute_query(db_connection, query3, data)
-        flash("You have successfully added new book on the booklist!")
+        
+        query4 = "SELECT isbn from books"
+        result3 = execute_query(db_connection, query4).fetchall()
+        
+        if booklist_len != len(result3):
+            flash("You have successfully added new book on the booklist!")
         return redirect(url_for('admin'))
 
 
@@ -165,3 +183,13 @@ def first_page():
     print("Fetching and rendering login web page")
     return render_template('login.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
+
+@webapp.route('/delete_book/<int:isbn>')
+def delete_book(isbn):
+    '''deletes a person with the given isbn'''
+    db_connection = connect_to_database()
+    query = "DELETE FROM books WHERE isbn = %s"
+    data = (isbn)
+
+    result = execute_query(db_connection, query, data)
+    return (str(result.rowcount) + "row deleted")

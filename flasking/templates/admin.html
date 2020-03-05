@@ -1,9 +1,6 @@
-{% extends "bootstrap/base.html" %}
 <!DOCTYPE html>
 <html lang="en">
-{% block content %}
 <head>
-    {% block styles %}
     <meta charset="UTF-8">
     <title>Beaver Books</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,9 +19,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="{{ font_url1 }}">
     <link rel="stylesheet" href="{{ font_url2 }}">
-    {% endblock %}
 </head>
 <body>
+
     <header>
         <div class="container" style="min-height:100% width:80%">
             {% with messages = get_flashed_messages() %}
@@ -100,7 +97,7 @@
               <td> {{ r[3] }}</td>
               <td> {{ r[4] }}</td>
               <td> {{ r[5] }}</td>
-              <td> <input class="btn black" name='delete' value="delete" style="width: 100px;" onclick="window.location = '/update_people/{{r[4]}}'"></td>
+              <td> <input class="btn black" name='delete' value="delete" style="width: 100px;" onclick="window.location = '/delete_book/{{ r.0 }}'"></td>
             </tr>
             {% endfor %}
       </table>
@@ -163,7 +160,6 @@
             </div>
         </div>
     </footer>
-    {% block scripts %}
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/owl.carousel.min.js"></script>
@@ -175,7 +171,6 @@
     <script src="{{url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script type=text/javascript src="{{url_for('static', filename='js/owl.carousel.min.js') }}"></script>
     <script src="{{url_for('static', filename='js/custom.js') }}"></script>
-    {% endblock %}
-{% endblock %}
 </body>
+
 </html>
