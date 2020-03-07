@@ -3,6 +3,7 @@ from flask import request, redirect
 from flask import url_for, session
 from db_connector.db_connector import connect_to_database, execute_query
 from flask_bootstrap import Bootstrap
+import base64
 
 #create the web application
 webapp = Flask(__name__, static_folder='static', static_url_path='/static')
@@ -60,17 +61,26 @@ def add_new_books():
         year = request.form['year']
         author_id = request.form['author_id']
         publisher_id = request.form['publisher_id']
-
-        query3 = 'INSERT INTO books (isbn, author_id, title, price, publisher_id, year) VALUES (%s,%s,%s,%s,%s,%s)'
-        data = (isbn, author_id, title, price, publisher_id, year)
-        execute_query(db_connection, query3, data)
+        #book_img = request.files['book_img']
+        #with open(request.files['book_img'], "rb") as img:
+        #    img_blob = base64.b64encode(img.read())
+         #   print(img_blob)
         
-        query4 = "SELECT isbn from books"
-        result3 = execute_query(db_connection, query4).fetchall()
-        
-        if booklist_len != len(result3):
-            flash("You have successfully added new book on the booklist!")
-        return redirect(url_for('admin'))
+        if int(price) >= 0 and int(year) >= 0 and int(isbn) >= 0: 
+            query3 = 'INSERT INTO books (isbn, author_id, title, price, publisher_id, year) VALUES (%s,%s,%s,%s,%s,%s)'
+            data = (isbn, author_id, title, price, publisher_id, year)
+            execute_query(db_connection, query3, data)
+            query4 = "SELECT isbn from books"
+            result3 = execute_query(db_connection, query4).fetchall()
+            if booklist_len != len(result3):
+                flash("You have successfully added new book on the booklist!")
+                return redirect(url_for('admin'))
+            else:
+                flash("please check your input !!")
+                return redirect(url_for('add_new_books'))
+        else:
+            flash("Please check your input (positive integer only for price, isbn, and year) ")
+            return redirect(url_for('add_new_books'))
 
 
 @webapp.route('/about.html')
@@ -97,16 +107,11 @@ def shopping_cart_normal():
 @webapp.route('/shop.html', methods=['POST', 'GET'])
 def shop():
     db_connection = connect_to_database()
-    if request == 'GET':
-        print("get GET ! \n")
-        query = 'SELECT isbn, title, price, year from books;'
-        result = execute_query(db_connection, query).fetchall()
+    print("get GET ! \n")
+    query = 'SELECT books.title, books.isbn, authors.first_name, authors.last_name, publishers.company_name, books.year, books.price from books INNER JOIN authors ON books.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id;'
+    result = execute_query(db_connection, query).fetchall()
 
-        return render_template('shop.html', books = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
-
-
-    print("Fetching and rendering shop web page")
-    return render_template('shop.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    return render_template('shop.html', book_info = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 @webapp.route('/shop_normal.html')
 def shop_normal():
@@ -189,7 +194,7 @@ def delete_book(isbn):
     '''deletes a person with the given isbn'''
     db_connection = connect_to_database()
     query = "DELETE FROM books WHERE isbn = %s"
-    data = (isbn)
-
-    result = execute_query(db_connection, query, data)
-    return (str(result.rowcount) + "row deleted")
+    data = (isbn,)
+    flash("selected book is sucessfully deleted !")
+    execute_query(db_connection, query, data)
+    return redirect(url_for('admin'))

@@ -97,7 +97,12 @@
               <td> {{ r[3] }}</td>
               <td> {{ r[4] }}</td>
               <td> {{ r[5] }}</td>
-              <td> <input class="btn black" name='delete' value="delete" style="width: 100px;" onclick="window.location = '/delete_book/{{ r.0 }}'"></td>
+              <td>
+                  <form action="{{ url_for('delete_book', isbn=r.0) }}">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <input class="btn black" type="submit" name='delete' value="delete" style="width: 100px;">
+                </form>
+                </td>
             </tr>
             {% endfor %}
       </table>
@@ -105,7 +110,7 @@
       <h1 style="padding-bottom: 10px; font-size: 30px;">User List</h1>
   <table style="width:50%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
       <tr>
-        <th>user_id</th>
+        <th>user No.</th>
         <th>email</th>
         <th>first_name</th>
         <th>last_name</th>

@@ -70,6 +70,20 @@
             <label for="authors" class="shop_label">Author:</label><br>
             <input type="search" id="authors" name="authors" placeholder="Search based on author..."><br>
         </form>
+        {% for b in book_info %}
+        <section class="books" method="get">
+            <div>
+                  <img src= "{{ b[3] }}" alt="book image" height="400" width="200">
+                  <p> Title: {{ b[0] }}</p>
+                  <p> ISBN: {{ b[1] }}</p>
+                  <p> Author: {{ b[2] }} {{ b[3] }}</p>
+                  <p> Publisher: {{ b[4] }}</p>
+                  <p> Year: {{ b[5] }}</p>
+                  <p> Price: ${{ b[6] }}</p>
+                  <button type="button" class="btn">Add to Cart</button>
+            </div>
+        </section>
+        {% endfor %}
         <section class="books">
             <div>
                 <img src="{{url_for('static', filename='images/mockingbird1.jpg')}}" alt="To Kill a Mockingbird" height="400" width="200">
