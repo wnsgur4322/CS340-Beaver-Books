@@ -85,8 +85,8 @@
     <form class="center" id="addbook" action="{{ url_for('add_new_books') }}" method="post">
         <div class="col-md-6" style="padding-bottom: 10px;">isbn: <input type="number" name="isbn"></div>
         <div class="col-md-6" style="padding-bottom: 10px;">title: <input type="text" name="title"></div>
-        <div class="col-md-6" style="padding-bottom: 10px;">price: <input type="number" name="price"></div>
-        <div class="col-md-6" style="padding-bottom: 10px;">year: <input type="number" name="year"></div>
+        <div class="col-md-6" style="padding-bottom: 10px;">price: <input type="number" name="price" min="0" step="0.01"></div>
+        <div class="col-md-6" style="padding-bottom: 10px;">year: <input type="number" name="year" min="0"></div>
         <div class="col-md-6" style="padding-bottom: 10px;">author: <select name="author_id">
 	<!-- display all planets inside this dropdown -->
         {% for a in authors %}

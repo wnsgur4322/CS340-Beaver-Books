@@ -163,9 +163,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `first_name`, `last_name`, `address`, `password`) VALUES
-(1, 'benny@oregonstate.edu', 'Benny', 'Beaver', '1234 NW Corvallis Avenue, Corvallis, Oregon', 'gobeavs'),
-(2, 'duck@uoregon.edu', 'Puddles', 'Duck', '5678 SW Eugene Avenue, Eugene, Oregon', 'goducks'),
-(3, 'kimchi@gmail', 'Taco', 'Kimchi', 'Super admin acccount', 'taco');
+(1, 'kimchi@gmail', 'Taco', 'Kimchi', 'Super admin acccount', 'taco'),
+(2, 'benny@oregonstate.edu', 'Benny', 'Beaver', '1234 NW Corvallis Avenue, Corvallis, Oregon', 'gobeavs'),
+(3, 'duck@uoregon.edu', 'Puddles', 'Duck', '5678 SW Eugene Avenue, Eugene, Oregon', 'goducks');
 
 --
 -- Indexes for dumped tables

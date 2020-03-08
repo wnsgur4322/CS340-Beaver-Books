@@ -10,6 +10,12 @@ webapp = Flask(__name__, static_folder='static', static_url_path='/static')
 Bootstrap(webapp)
 webapp.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+db_connection = connect_to_database()
+super_query = "SELECT user_id FROM users;"
+super_result = execute_query(db_connection, super_query).fetchall()
+super_user_id = 0
+print(super_result[0])
+
 @webapp.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html', title = '404'), 404
@@ -66,7 +72,7 @@ def add_new_books():
         #    img_blob = base64.b64encode(img.read())
          #   print(img_blob)
         
-        if int(price) >= 0 and int(year) >= 0 and int(isbn) >= 0: 
+        if float(price) >= 0 and int(year) >= 0 and int(isbn) >= 0: 
             query3 = 'INSERT INTO books (isbn, author_id, title, price, publisher_id, year) VALUES (%s,%s,%s,%s,%s,%s)'
             data = (isbn, author_id, title, price, publisher_id, year)
             execute_query(db_connection, query3, data)
@@ -113,7 +119,7 @@ def shop():
 
     return render_template('shop.html', book_info = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
-@webapp.route('/shop_normal.html')
+@webapp.route('/shop_normal.html', methods=['POST', 'GET'])
 def shop_normal():
     print("Fetching and rendering shop web page")
     return render_template('shop_normal.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
@@ -124,10 +130,11 @@ def index():
     print("Fetching and rendering index web page")
     return render_template('index.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
-@webapp.route('/index_normal.html')
+@webapp.route('/index_normal.html', methods=['POST', 'GET'])
 def index_normal():
     print("Fetching and rendering index web page")
     return render_template('index_normal.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+
 
 @webapp.route('/login.html', methods=['POST', 'GET'])
 def login():
@@ -136,6 +143,11 @@ def login():
     result = execute_query(db_connection, query).fetchall()
     print(result[1][0])
     print(len(result))
+    
+    query2 = "SELECT user_id FROM users;"
+    result2 = execute_query(db_connection, query2).fetchall()
+    print(result2[0])
+
     if request.method =='POST':
         input_email = request.form['user_email']
         input_password = request.form['password']
@@ -147,6 +159,7 @@ def login():
             
         for i in range(len(result)):
             if result[i][0] == input_email and result[i][1] == input_password:
+                super_user_id = result2[i][0]
                 return redirect(url_for('index_normal'))
     
     print("Fetching and rendering login web page")
@@ -191,10 +204,27 @@ def first_page():
 
 @webapp.route('/delete_book/<int:isbn>')
 def delete_book(isbn):
-    '''deletes a person with the given isbn'''
     db_connection = connect_to_database()
     query = "DELETE FROM books WHERE isbn = %s"
     data = (isbn,)
     flash("selected book is sucessfully deleted !")
     execute_query(db_connection, query, data)
     return redirect(url_for('admin'))
+
+@webapp.route('/delete_user/<int:user_id>')
+def delete_user(user_id):
+    db_connection = connect_to_database()
+    query = "DELETE FROM users WHERE user_id = %s"
+    data = (user_id,)
+    if user_id == 1:
+        flash("your selected account is SUPER ADMIN ACCOUNT, so CAN'T DELETE IT!")
+        return redirect(url_for('admin')) 
+        
+    flash("selected user is sucessfully deleted !")
+    execute_query(db_connection, query, data)
+    return redirect(url_for('admin'))
+
+@webapp.route('/account_update.html', methods=['POST', 'GET'])
+def account_update():
+    print("Fetching and rendering account_update.html web page")
+    return render_template('account_update.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")

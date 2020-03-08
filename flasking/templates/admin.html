@@ -126,7 +126,12 @@
       <td> {{ r[3] }}</td>
       <td> {{ r[4] }}</td>
       <td> {{ r[5] }}</td>
-      <td> <input class="btn black" name='delete' value="delete" style="width: 100px;" onclick="window.location = '/update_user/{{r[4]}}'"></td>
+      <td>
+        <form action="{{ url_for('delete_user', user_id=r.0) }}">
+        <input type="hidden" name="_method" value="DELETE">
+        <input class="btn black" type="submit" name='delete' value="delete" style="width: 100px;">
+      </form>
+      </td>
     </tr>
     {% endfor %}
       </tr>
