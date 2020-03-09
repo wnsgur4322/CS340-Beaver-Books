@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: classmysql.engr.oregonstate.edu:3306
--- Generation Time: Mar 02, 2020 at 06:53 PM
+-- Generation Time: Mar 09, 2020 at 12:18 AM
 -- Server version: 10.4.11-MariaDB-log
 -- PHP Version: 7.0.33
 
@@ -31,7 +31,6 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `authors`;
 CREATE TABLE `authors` (
   `author_id` int(11) UNSIGNED NOT NULL,
-  `isbn` int(10) UNSIGNED ZEROFILL NOT NULL,
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
@@ -42,11 +41,12 @@ CREATE TABLE `authors` (
 -- Dumping data for table `authors`
 --
 
-INSERT INTO `authors` (`author_id`, `isbn`, `first_name`, `last_name`, `address`, `url`) VALUES
-(1, 0060935464, 'Harper', 'Lee', '195 Broadway Floor 22, New York, NY 10007 USA', 'https://www.biography.com/writer/harper-lee'),
-(2, 0060934344, 'Miguel De', 'Cervantes', 'Madrid, Spain', 'https://www.biography.com/writer/miguel-de-cervantes'),
-(3, 1684052084, 'Joe', 'Caramagna', NULL, 'https://marvel.fandom.com/wiki/Joe_Caramagna_(Earth-1218)'),
-(4, 1684052084, 'Joey', 'Cavalieri', NULL, 'https://sva.edu/faculty/joey-cavalieri');
+INSERT INTO `authors` (`author_id`, `first_name`, `last_name`, `address`, `url`) VALUES
+(0, 'kimchi', 'tester', 'anywhere on the earth', 'https://google.com'),
+(1, 'Harper', 'Lee', '195 Broadway Floor 22, New York, NY 10007 USA', 'https://www.biography.com/writer/harper-lee'),
+(2, 'Miguel De', 'Cervantes', 'Madrid, Spain', 'https://www.biography.com/writer/miguel-de-cervantes'),
+(3, 'Joe', 'Caramagna', NULL, 'https://marvel.fandom.com/wiki/Joe_Caramagna_(Earth-1218)'),
+(4, 'Joey', 'Cavalieri', NULL, 'https://sva.edu/faculty/joey-cavalieri');
 
 -- --------------------------------------------------------
 
@@ -57,21 +57,21 @@ INSERT INTO `authors` (`author_id`, `isbn`, `first_name`, `last_name`, `address`
 DROP TABLE IF EXISTS `books`;
 CREATE TABLE `books` (
   `isbn` int(10) UNSIGNED ZEROFILL NOT NULL,
-  `author_id` int(11) UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `price` decimal(8,2) NOT NULL,
   `publisher_id` int(11) UNSIGNED NOT NULL,
-  `year` int(2) NOT NULL
+  `year` int(2) NOT NULL,
+  `book_img` varchar(555) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `books`
 --
 
-INSERT INTO `books` (`isbn`, `author_id`, `title`, `price`, `publisher_id`, `year`) VALUES
-(0060934344, 2, 'Don Quixote', '21.03', 2, 1605),
-(0060935464, 1, 'To Kill a Mockingbird', '17.30', 1, 1960),
-(1684052084, 3, 'DuckTales: Treasure Trove', '8.26', 3, 2018);
+INSERT INTO `books` (`isbn`, `title`, `price`, `publisher_id`, `year`, `book_img`) VALUES
+(0060934344, 'Don Quixote', '21.03', 2, 1605, 'https://images-na.ssl-images-amazon.com/images/I/410UIVet23L._SX311_BO1,204,203,200_.jpg'),
+(0060935464, 'To Kill a Mockingbird', '17.30', 1, 1960, 'https://images-na.ssl-images-amazon.com/images/I/51JBKEB3ecL._SX295_BO1,204,203,200_.jpg'),
+(1684052084, 'DuckTales: Treasure Trove', '8.26', 3, 2018, 'https://images-na.ssl-images-amazon.com/images/I/51YTMe783WL._SX329_BO1,204,203,200_.jpg');
 
 -- --------------------------------------------------------
 
@@ -92,8 +92,8 @@ CREATE TABLE `books_authors` (
 INSERT INTO `books_authors` (`isbn`, `author_id`) VALUES
 (0060935464, 1),
 (0060934344, 2),
-(1684052084, 3),
-(1684052084, 4);
+(1684052084, 4),
+(1684052084, 3);
 
 -- --------------------------------------------------------
 
@@ -165,7 +165,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `email`, `first_name`, `last_name`, `address`, `password`) VALUES
 (1, 'kimchi@gmail', 'Taco', 'Kimchi', 'Super admin acccount', 'taco'),
 (2, 'benny@oregonstate.edu', 'Benny', 'Beaver', '1234 NW Corvallis Avenue, Corvallis, Oregon', 'gobeavs'),
-(3, 'duck@uoregon.edu', 'Puddles', 'Duck', '5678 SW Eugene Avenue, Eugene, Oregon', 'goducks');
+(3, 'duck@uoregon.edu', 'Puddles', 'Duck', '5678 SW Eugene Avenue, Eugene, Oregon', 'goducks'),
+(4, 'test@test.com', 'kimchi', 'kimchi', 'test street ', 'test');
 
 --
 -- Indexes for dumped tables
@@ -175,15 +176,13 @@ INSERT INTO `users` (`user_id`, `email`, `first_name`, `last_name`, `address`, `
 -- Indexes for table `authors`
 --
 ALTER TABLE `authors`
-  ADD PRIMARY KEY (`author_id`),
-  ADD KEY `isbn` (`isbn`);
+  ADD PRIMARY KEY (`author_id`);
 
 --
 -- Indexes for table `books`
 --
 ALTER TABLE `books`
   ADD PRIMARY KEY (`isbn`),
-  ADD KEY `author_id` (`author_id`),
   ADD KEY `publisher_id` (`publisher_id`);
 
 --
@@ -220,7 +219,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+ALTER TABLE `authors`
+  MODIFY `author_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+ALTER TABLE `publishers`
+  MODIFY `publisher_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- Constraints for dumped tables
