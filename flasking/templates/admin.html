@@ -56,13 +56,12 @@
                                 <a href="about.html" class="nav-link">About</a>
                             </li>
                             <li class="navbar-item">
+                                <a href="logout" class="nav-link">Sign out</a>
+                            </li>
+                            <li class="navbar-item">
                                 <a href="shopping_cart.html" class="fa fa-shopping-cart"></a>
                             </li>
                         </ul>
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search here..." aria-label="Search">
-                            <span class="fa fa-search"></span>
-                        </form>
                     </div>
                 </nav>
             </div>
@@ -76,27 +75,26 @@
         </div>
     </div>
 
-    <div>
+    <div class="container">
+        
         <h1 style="padding-bottom: 10px; font-size: 30px;">Available Books</h1>
-        <p class="btn black" style="align-content: center; margin-left: 1290px;" align="center" onclick="window.location = 'add_new_books.html'">add books</p>
-    <table style="width:50%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
+        <p class="btn black" style="align-content: center; align-self: center;" align="center" onclick="window.location = 'add_new_books.html'">add books</p>
+    <table style="width:80%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
         <tr>
           <th>isbn</th>
-          <th>author_id</th>
           <th>title</th>
           <th>price</th>
           <th>publisher_id</th>
           <th>year</th>
           <th style="width: 10px;">delete</th>
         </tr>
-            {% for r in rows %}
+            {% for r in books %}
             <tr>
               <td> {{ r.0 }}</td>
               <td> {{ r[1] }}</td>
               <td> {{ r[2] }}</td>
               <td> {{ r[3] }}</td>
               <td> {{ r[4] }}</td>
-              <td> {{ r[5] }}</td>
               <td>
                   <form action="{{ url_for('delete_book', isbn=r.0) }}">
                   <input type="hidden" name="_method" value="DELETE">
@@ -108,7 +106,7 @@
       </table>
 
       <h1 style="padding-bottom: 10px; font-size: 30px;">User List</h1>
-  <table style="width:50%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
+  <table style="width:80%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
       <tr>
         <th>user No.</th>
         <th>email</th>
@@ -118,7 +116,7 @@
         <th>password</th>
         <th style="width: 10px;">delete</th>
     </tr>
-    {% for r in rows2 %}
+    {% for r in users %}
     <tr>
       <td> {{ r.0 }}</td>
       <td> {{ r[1] }}</td>
@@ -135,6 +133,48 @@
     </tr>
     {% endfor %}
       </tr>
+    </table>
+
+    <h1 style="padding-bottom: 10px; font-size: 30px;">Authors</h1>
+        <p class="btn black" style="align-content: center;" align="center" onclick="window.location = 'add_new_authors.html'">add authors</p>
+    <table style="width:80%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
+        <tr>
+          <th>author_id</th>
+          <th>first_name</th>
+          <th>last_name</th>
+          <th>address</th>
+          <th>url</th>
+        </tr>
+            {% for r in authors %}
+            <tr>
+              <td> {{ r.0 }}</td>
+              <td> {{ r[1] }}</td>
+              <td> {{ r[2] }}</td>
+              <td> {{ r[3] }}</td>
+              <td> {{ r[4] }}</td>
+            </tr>
+            {% endfor %}
+      </table>
+    
+      <h1 style="padding-bottom: 10px; font-size: 30px;">Publishers</h1>
+      <p class="btn black" style="align-content: center;" align="center" onclick="window.location = 'add_new_publishers.html'">add publishers</p>
+  <table style="width:80%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
+      <tr>
+        <th>publisher_id</th>
+        <th>company</th>
+        <th>contact</th>
+        <th>address</th>
+        <th>url</th>
+      </tr>
+          {% for r in publishers %}
+          <tr>
+            <td> {{ r.0 }}</td>
+            <td> {{ r[1] }}</td>
+            <td> {{ r[2] }}</td>
+            <td> {{ r[3] }}</td>
+            <td> {{ r[4] }}</td>
+          </tr>
+          {% endfor %}
     </table>
     </div>
 

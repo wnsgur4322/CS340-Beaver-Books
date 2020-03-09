@@ -22,6 +22,17 @@
 </head>
 <body>
     <header>
+        <div class="container" style="min-height:100% width:80%">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
         <div class="main-menu">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light">
@@ -44,13 +55,12 @@
                                 <a href="account_update.html" class="nav-link">Account</a>
                             </li>
                             <li class="navbar-item">
+                                <a href="logout" class="nav-link">Sign out</a>
+                            </li>
+                            <li class="navbar-item">
                                 <a href="shopping_cart_normal.html" class="fa fa-shopping-cart"></a>
                             </li>
                         </ul>
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search here..." aria-label="Search">
-                            <span class="fa fa-search"></span>
-                        </form>
                     </div>
                 </nav>
             </div>
@@ -70,43 +80,25 @@
             <label for="authors" class="shop_label">Author:</label><br>
             <input type="search" id="authors" name="authors" placeholder="Search based on author..."><br>
         </form>
-        <section class="books">
+        {% for b in book_info %}
+        <section class="books" method="get">
             <div>
-                <img src="{{url_for('static', filename='images/mockingbird1.jpg')}}" alt="To Kill a Mockingbird" height="400" width="200">
-                <p><b>Today's best seller !</b></p>
-                <p><b>Title: To Kill a Mockingbird</b></p>
-                <p>Author: Harper Lee</p>
-                <p>Publisher: J. B. Lippincott & Co.</p>
-                <p>Year: 1960</p>
-                <p>ISBN: 0060935464</p> 
-                <p>Price: $5.49</p>
-                <button type="button" class="btn">Add to Cart</button>
+                  <img src= "{{ b[7] }}" alt="book image" height="400" width="200"> <!-- try sourcing with img url, not file-->
+                  <p style="font-weight: bold;"> Title: {{ b[0] }}</p>
+                  <p> ISBN: {{ b[1] }}</p>
+                  <p> Author: {{ b[2] }} {{ b[3] }}</p>
+                  <p> Publisher: {{ b[4] }}</p>
+                  <p> Year: {{ b[5] }}</p>
+                  <p> Price: ${{ b[6] }}</p>
+                  <p>
+                    <form action="{{ url_for('add_to_cart_normal', isbn=b[1]) }}">
+                      <input type="hidden" name="_method" value="Add to Cart">
+                      <input class="btn" type="submit" name='delete' value="Add to Cart" style="width: 150px;">
+                    </form>
+                  </p>
             </div>
         </section>
-        <section class="books">
-            <div>
-                <img src="{{url_for('static', filename='images/don quixote.jpg')}}" alt="Don Quixote" height="400" width="200">
-                <p><b>Title: Don Quixote</b></p>
-                <p>Author: Miguel De Cervantes</p>
-                <p>Publisher: Ecco (Reprint edition)</p>
-                <p>Year: 1605</p>
-                <p>ISBN: 0060934344</p>
-                <p>Price: $21.03</p>
-                <button type="button" class="btn">Add to Cart</button>
-            </div>
-        </section>
-        <section class="books">
-            <div>
-                <img src="{{url_for('static', filename='images/ducktales.jpg')}}" alt="DuckTales: Treasure Trove" height="400" width="200">
-                <p><b>Title: DuckTales: Treasure Trove</b></p>
-                <p>Author: Joe Caramagna</p>
-                <p>Publisher:IDW Publishing</p>
-                <p>Year: 2018</p>
-                <p>ISBN: 1684052084</p>
-                <p>Price: $8.26</p>
-                <button type="button" class="btn">Add to Cart</button>
-            </div>
-        </section>
+        {% endfor %}
     </div>
 
     <footer>

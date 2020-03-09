@@ -10,12 +10,6 @@ webapp = Flask(__name__, static_folder='static', static_url_path='/static')
 Bootstrap(webapp)
 webapp.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-db_connection = connect_to_database()
-super_query = "SELECT user_id FROM users;"
-super_result = execute_query(db_connection, super_query).fetchall()
-super_user_id = 0
-print(super_result[0])
-
 @webapp.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html', title = '404'), 404
@@ -23,6 +17,45 @@ def page_not_found(error):
 @webapp.errorhandler(500)
 def internal_server_error(error):
     return render_template('500.html', title = '500'), 500
+
+@webapp.route('/login.html', methods=['POST', 'GET'])
+def login():
+    db_connection = connect_to_database()
+    query = "SELECT email, password FROM users;"
+    result = execute_query(db_connection, query).fetchall()
+    print(len(result))
+    
+    query2 = "SELECT user_id FROM users;"
+    result2 = execute_query(db_connection, query2).fetchall()
+    print(result2[0])
+
+    if request.method =='POST':
+        input_email = request.form['user_email']
+        input_password = request.form['password']
+        print("user inputted: {0}, {1}".format(input_email, input_password))
+        global SUPER_USER_ID
+
+        if input_email == "kimchi@gmail.com" and input_password == "taco":
+            SUPER_USER_ID = result2[0][0]
+            flash("You were successfully logged in with SUPER ADMIN ACCOUNT !! ")
+            return redirect(url_for('index'))
+            
+        for i in range(len(result)):
+            if result[i][0] == input_email and result[i][1] == input_password:
+                SUPER_USER_ID = result2[i][0]
+                print(SUPER_USER_ID)
+                return redirect(url_for('index_normal'))
+        
+        flash("Wrong email or password, please check your input!")
+        return redirect(url_for('login'))
+    
+    print("Fetching and rendering login web page")
+    return render_template('login.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+
+@webapp.route('/logout')
+def logout():
+    SUPER_USER_ID = 0
+    return redirect(url_for('login'))
 
 @webapp.route('/admin.html', methods=['POST', 'GET'])
 #the name of this function is just a cosmetic thing
@@ -36,8 +69,16 @@ def admin():
     # load users table from DB
     query2 = "SELECT * FROM users;"
     result2 = execute_query(db_connection, query2).fetchall()
-    print(result)
-    return render_template('admin.html', rows=result, rows2=result2, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+
+    #load authors table from DB
+    query3 = "SELECT * FROM authors;"
+    result3 = execute_query(db_connection, query3).fetchall()
+    
+    #load publishers table from DB
+    query4 = "SELECT * FROM publishers;"
+    result4 = execute_query(db_connection, query4).fetchall()
+
+    return render_template('admin.html', books=result, users=result2, authors=result3, publishers=result4, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 @webapp.route('/add_new_books.html', methods=['POST','GET'])
 def add_new_books():
@@ -65,19 +106,19 @@ def add_new_books():
         title = request.form['title']
         price = request.form['price']
         year = request.form['year']
-        author_id = request.form['author_id']
         publisher_id = request.form['publisher_id']
-        #book_img = request.files['book_img']
-        #with open(request.files['book_img'], "rb") as img:
-        #    img_blob = base64.b64encode(img.read())
-         #   print(img_blob)
+        book_img = request.form['book_img']
+        author_id = request.form['author_id']
         
         if float(price) >= 0 and int(year) >= 0 and int(isbn) >= 0: 
-            query3 = 'INSERT INTO books (isbn, author_id, title, price, publisher_id, year) VALUES (%s,%s,%s,%s,%s,%s)'
-            data = (isbn, author_id, title, price, publisher_id, year)
+            query3 = 'INSERT INTO books (isbn, title, price, publisher_id, year, book_img) VALUES (%s,%s,%s,%s,%s,%s)'
+            data = (isbn, title, price, publisher_id, year, book_img)
             execute_query(db_connection, query3, data)
             query4 = "SELECT isbn from books"
             result3 = execute_query(db_connection, query4).fetchall()
+            query5 = 'INSERT INTO books_authors (isbn, author_id) VALUES (%s,%s)'
+            data2 = (isbn,author_id)
+            execute_query(db_connection, query5,data2)
             if booklist_len != len(result3):
                 flash("You have successfully added new book on the booklist!")
                 return redirect(url_for('admin'))
@@ -88,6 +129,69 @@ def add_new_books():
             flash("Please check your input (positive integer only for price, isbn, and year) ")
             return redirect(url_for('add_new_books'))
 
+@webapp.route('/add_new_authors.html', methods=['POST','GET'])
+def add_new_authors():
+    print("Add new authors!\n")
+    db_connection = connect_to_database()
+
+    if request.method == 'GET':
+        print("get GET \n")
+        query = 'SELECT * from authors'
+        result = execute_query(db_connection, query).fetchall()
+        print(result)
+
+        return render_template('add_new_authors.html', authors = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+
+    
+    elif request.method == 'POST':
+        print("take user inputs for adding a new author\n")
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        address = request.form['address']
+        url = request.form['url']
+
+        if first_name != "" and last_name != "":
+             query2 = 'INSERT INTO authors (first_name, last_name, address, url) VALUES (%s,%s,%s,%s)'
+             data = (first_name, last_name, address, url)
+             execute_query(db_connection, query2, data)
+             flash("You have successfully added new author on the author list!")
+             return redirect(url_for('admin'))
+        
+        else:
+            flash("please check your input (don't empty on author name slots")
+            return redirect(url_for('add_new_authors'))
+
+@webapp.route('/add_new_publishers.html', methods=['POST','GET'])
+def add_new_publishers():
+    print("Add new publishers!\n")
+    db_connection = connect_to_database()
+
+    if request.method == 'GET':
+        print("get GET \n")
+        query = 'SELECT * from publishers'
+        result = execute_query(db_connection, query).fetchall()
+        print(result)
+
+        return render_template('add_new_publishers.html', publishers = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+
+    
+    elif request.method == 'POST':
+        print("take user inputs for adding a new author\n")
+        company_name = request.form['company_name']
+        contact = request.form['contact']
+        address = request.form['address']
+        url = request.form['url']
+
+        if company_name != "" and contact != "":
+             query2 = 'INSERT INTO publishers (company_name, contact, address, url) VALUES (%s,%s,%s,%s)'
+             data = (company_name, contact, address, url)
+             execute_query(db_connection, query2, data)
+             flash("You have successfully added new publisher on the publisher list!")
+             return redirect(url_for('admin'))
+        
+        else:
+            flash("please check your input (don't empty on company name and contact slots)")
+            return redirect(url_for('add_new_publishers'))
 
 @webapp.route('/about.html')
 def about():
@@ -100,70 +204,93 @@ def about_normal():
     return render_template('about_normal.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 
-@webapp.route('/shopping_cart.html')
+@webapp.route('/shopping_cart.html', methods=['POST', 'GET'])
 def shopping_cart():
+    db_connection = connect_to_database()
+    print("get GET ! \n")
+    print("user key: %d" % SUPER_USER_ID)
+    
+    query = 'SELECT books.title, shopping_carts.isbn, books.price, books.book_img, shopping_carts.date FROM shopping_carts INNER JOIN books ON shopping_carts.isbn = books.isbn WHERE user_id = %d ' % SUPER_USER_ID
+    result = execute_query(db_connection, query).fetchall()
+    count = len(result)
+    total_price = 0
+    for i in range(len(result)):
+        total_price = result[i][2] + total_price
+
     print("Fetching and rendering shopping_cart web page")
-    return render_template('shopping_cart.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    return render_template('shopping_cart.html', cart_list = result, user_key = SUPER_USER_ID, total_price = total_price, count = count, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 @webapp.route('/shopping_cart_normal.html')
 def shopping_cart_normal():
+    db_connection = connect_to_database()
+    print("get GET ! \n")
+    print("user key: %d" % SUPER_USER_ID)
+    
+    query = 'SELECT books.title, shopping_carts.isbn, books.price, books.book_img, shopping_carts.date FROM shopping_carts INNER JOIN books ON shopping_carts.isbn = books.isbn WHERE user_id = %d ' % SUPER_USER_ID
+    result = execute_query(db_connection, query).fetchall()
+    count = len(result)
+    total_price = 0
+    for i in range(len(result)):
+        total_price = result[i][2] + total_price
+
     print("Fetching and rendering shopping_cart web page")
-    return render_template('shopping_cart_normal.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    return render_template('shopping_cart_normal.html', cart_list = result, user_key = SUPER_USER_ID, total_price = total_price, count = count, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 @webapp.route('/shop.html', methods=['POST', 'GET'])
 def shop():
     db_connection = connect_to_database()
     print("get GET ! \n")
-    query = 'SELECT books.title, books.isbn, authors.first_name, authors.last_name, publishers.company_name, books.year, books.price from books INNER JOIN authors ON books.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id;'
+    query = 'SELECT books.title, books.isbn, authors.first_name, authors.last_name, publishers.company_name, books.year, books.price, books.book_img from books INNER JOIN books_authors ON books.isbn = books_authors.isbn INNER JOIN authors ON books_authors.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id;'
     result = execute_query(db_connection, query).fetchall()
+    
+    for i in range(len(result)):
+        try:
+            key = result[i][1]
+            for j in range(len(result)):
+                if key == result[j][1] and i != j:
+                    print("deleting!")
+                    result = result[:j] + result[j+1:]
+        except:
+            break
 
     return render_template('shop.html', book_info = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 @webapp.route('/shop_normal.html', methods=['POST', 'GET'])
 def shop_normal():
-    print("Fetching and rendering shop web page")
-    return render_template('shop_normal.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    db_connection = connect_to_database()
+    print("get GET ! \n")
+    query = 'SELECT books.title, books.isbn, authors.first_name, authors.last_name, publishers.company_name, books.year, books.price, books.book_img from books INNER JOIN books_authors ON books.isbn = books_authors.isbn INNER JOIN authors ON books_authors.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id;'
+    result = execute_query(db_connection, query).fetchall()
+    
+    for i in range(len(result)):
+        try:
+            key = result[i][1]
+            for j in range(len(result)):
+                if key == result[j][1] and i != j:
+                    print("deleting!")
+                    result = result[:j] + result[j+1:]
+        except:
+            break
+
+    return render_template('shop_normal.html', book_info = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 
-@webapp.route('/index.html')
+@webapp.route('/index.html', methods=['POST', 'GET'])
 def index():
     print("Fetching and rendering index web page")
     return render_template('index.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 @webapp.route('/index_normal.html', methods=['POST', 'GET'])
 def index_normal():
-    print("Fetching and rendering index web page")
-    return render_template('index_normal.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
-
-
-@webapp.route('/login.html', methods=['POST', 'GET'])
-def login():
     db_connection = connect_to_database()
-    query = "SELECT email, password FROM users;"
+    query = "SELECT user_id, first_name FROM users;"
     result = execute_query(db_connection, query).fetchall()
-    print(result[1][0])
-    print(len(result))
-    
-    query2 = "SELECT user_id FROM users;"
-    result2 = execute_query(db_connection, query2).fetchall()
-    print(result2[0])
-
-    if request.method =='POST':
-        input_email = request.form['user_email']
-        input_password = request.form['password']
-        print("user inputted: {0}, {1}".format(input_email, input_password))
-
-        if input_email == "kimchi@gmail.com" and input_password == "taco":
-            flash("You were successfully logged in with SUPER ADMIN ACCOUNT !! ")
-            return redirect(url_for('index'))
-            
-        for i in range(len(result)):
-            if result[i][0] == input_email and result[i][1] == input_password:
-                super_user_id = result2[i][0]
-                return redirect(url_for('index_normal'))
-    
-    print("Fetching and rendering login web page")
-    return render_template('login.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    for i in range(len(result)):
+        print(result[i])
+        if result[i][0] == SUPER_USER_ID:
+            flash ("Welcome to Beaver Books ! %s !" % result[i][1])
+    print("Fetching and rendering index web page (user_id = %d)" % SUPER_USER_ID )
+    return render_template('index_normal.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 @webapp.route('/register.html', methods=['POST', 'GET'])
 def register():
@@ -224,7 +351,62 @@ def delete_user(user_id):
     execute_query(db_connection, query, data)
     return redirect(url_for('admin'))
 
+@webapp.route('/delete_shopping_cart/<string:date>')
+def delete_shopping_cart(date):
+    db_connection = connect_to_database()
+    query = "DELETE FROM shopping_carts WHERE date = %s;"
+    data = (date,)
+    execute_query(db_connection, query, data)
+    flash("Your selected book has successfully deleted from your shopping cart !")
+    return redirect(url_for('shopping_cart'))
+
+@webapp.route('/delete_shopping_cart_normal/<string:date>')
+def delete_shopping_cart_normal(date):
+    db_connection = connect_to_database()
+    query = "DELETE FROM shopping_carts WHERE date = %s;"
+    data = (date,)
+    execute_query(db_connection, query, data)
+    flash("Your selected book has successfully deleted from your shopping cart !")
+    return redirect(url_for('shopping_cart_normal'))
+
+@webapp.route('/add_to_cart/<int:isbn>')
+def add_to_cart(isbn):
+    db_connection = connect_to_database()
+    query = 'INSERT INTO shopping_carts (user_id, isbn) VALUES (%s,%s);'
+    data = (SUPER_USER_ID, isbn)
+    execute_query(db_connection, query, data)
+    flash("Your selected book has successfully added on your shopping cart !")
+    return redirect(url_for('shop'))
+
+@webapp.route('/add_to_cart_normal/<int:isbn>')
+def add_to_cart_normal(isbn):
+    db_connection = connect_to_database()
+    query = 'INSERT INTO shopping_carts (user_id, isbn) VALUES (%s,%s);'
+    data = (SUPER_USER_ID, isbn)
+    execute_query(db_connection, query, data)
+    flash("Your selected book has successfully added on your shopping cart !")
+    return redirect(url_for('shop_normal'))
+
 @webapp.route('/account_update.html', methods=['POST', 'GET'])
 def account_update():
+    db_connection = connect_to_database()
+    
+    if request.method == "GET":
+        query = "SELECT * FROM users WHERE user_id = %d" % SUPER_USER_ID
+        result = execute_query(db_connection, query).fetchall()
+        print(result)
+
+    if request.method == "POST":
+        print("update user info !")
+        new_email = request.form['email']
+        new_password = request.form['password']
+        new_address = request.form['address']
+
+        query2 = "UPDATE users SET email = %s, password = %s, address = %s WHERE user_id = %s"
+        data = (new_email, new_password, new_address, SUPER_USER_ID)
+        execute_query(db_connection, query2, data)
+        flash("your information has successfully updated!")
+        return redirect(url_for('index_normal'))
+
     print("Fetching and rendering account_update.html web page")
-    return render_template('account_update.html', font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    return render_template('account_update.html', user_info = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")

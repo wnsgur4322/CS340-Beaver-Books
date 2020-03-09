@@ -59,13 +59,12 @@
                                 <a href="account_update.html" class="nav-link">Account</a>
                             </li>
                             <li class="navbar-item">
+                                <a href="logout" class="nav-link">Sign out</a>
+                            </li>
+                            <li class="navbar-item">
                                 <a href="shopping_cart_normal.html" class="fa fa-shopping-cart"></a>
                             </li>
                         </ul>
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search here..." aria-label="Search">
-                            <span class="fa fa-search"></span>
-                        </form>
                     </div>
                 </nav>
             </div>
@@ -81,29 +80,51 @@
 
     <section class="static about-sec">
         <div class="container">
-        <h3 style="color: black;">Update Your Account</h3>
-        <form class="center" id="addbook" action="{{ url_for('add_new_books') }}" method="post">
-            <div class="col-md-6" style="padding-bottom: 10px;">isbn: <input type="number" name="isbn"></div>
-            <div class="col-md-6" style="padding-bottom: 10px;">title: <input type="text" name="title"></div>
-            <div class="col-md-6" style="padding-bottom: 10px;">price: <input type="number" name="price" min="0" step="0.01"></div>
-            <div class="col-md-6" style="padding-bottom: 10px;">year: <input type="number" name="year" min="0"></div>
-            <div class="col-md-6" style="padding-bottom: 10px;">author: <select name="author_id">
-        <!-- display all planets inside this dropdown -->
-            {% for a in authors %}
-              <option value="{{ a[0] }}">{{ a[1] }} {{ a[2] }}</option>
-            {% endfor %}
-        </select>
+        <h1 style="color: black; padding-bottom: 15px;">Update Your Account</h1>
+        <table style="width:60%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
+            <tr>
+              <th>email</th>
+              <th>first_name</th>
+              <th>last_name</th>
+              <th>address</th>
+              <th>password</th>
+          </tr>
+          {% for r in user_info %}
+          <tr>
+            <td> {{ r[1] }}</td>
+            <td> {{ r[2] }}</td>
+            <td> {{ r[3] }}</td>
+            <td> {{ r[4] }}</td>
+            <td> {{ r[5] }}</td>
+          </tr>
+          {% endfor %}
+            </tr>
+          </table>
+        <div class="form">
+        <form class="center" id="account_update" action="{{ url_for('account_update') }}" method="post">
+            <div class="row">
+                <p style= "font-weight: bold; margin-right: 64.45px;">New Email</p>
+                <div class="col-md-4">
+                    <input type="email" name="email" placeholder="Enter New Email Address" required style="width: 350px; height: 40px;">
+                </div>
             </div>
-            <div class="col-md-6" style="padding-bottom: 10px;">publisher: <select name="publisher_id">
-        <!-- display all planets inside this dropdown -->
-            {% for p in publishers %}
-              <option value="{{ p[0] }}">{{ p[1] }} {{ p[2] }}</option>
-            {% endfor %}
-        </select>
+            <div class="row">
+                <p style= "font-weight: bold; margin-right: 34.2px;">New password</p>
+                <div class="col-md-4">
+                    <input type="password" name="password" placeholder="Enter New password" required style="width: 350px; height: 40px;">
+                </div>
             </div>
+            <div class="row">
+                <p style= "font-weight: bold; margin-right: 45.21px;">New Address</p>
+                <div class="col-md-4">
+                    <input type="address" name="address" placeholder="Enter New Address" required style="width: 350px; height: 40px;">
+                </div>
+            </div>
+
         <input class="btn black" type="submit" value="Submit">
         </form>
         </div>
+     </div>
     </section>
 
     <footer>

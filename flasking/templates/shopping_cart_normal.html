@@ -22,6 +22,17 @@
 </head>
 <body>
     <header>
+        <div class="container" style="min-height:100% width:80%">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
         <div class="main-menu">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light">
@@ -43,14 +54,13 @@
                             <li class="navbar-item">
                                 <a href="account_update.html" class="nav-link">Account</a>
                             </li>
+                            <li class="navbar-item">
+                                <a href="logout" class="nav-link">Sign out</a>
+                            </li>
                             <li class="navbar-item active">
                                 <a href="shopping_cart_normal.html" class="fa fa-shopping-cart"></a>
                             </li>
                         </ul>
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search here..." aria-label="Search">
-                            <span class="fa fa-search"></span>
-                        </form>
                     </div>
                 </nav>
             </div>
@@ -64,35 +74,32 @@
     </div>
     <div>
         <h1>Shopping Cart</h1>
-        <section id="total_books">
+        <section id="total_books" method="get">
             <div>
-                <b>User ID: 1</b>
+                <b>User ID: {{ user_key }}</b>
             </div>
             <div>
-                <b>Total Books: 2</b>
+                <b>Total Books: {{ count }} </b>
             </div>
             <div>
-                <b>Total Price: $26.52</b>
-            </div>
-        </section>
-        <section class="books">
-            <div>
-                <img src="{{url_for('static', filename='images/mockingbird1.jpg')}}" alt="To Kill a Mockingbird" height="400" width="200">
-                <p><b>To Kill a Mockingbird</b></p>
-                <p>ISBN: 0060935464</p>
-                <p>Price: $5.49</p>
-                <button type="button" class="btn">Remove</button>
+                <b>Total Price: ${{ total_price }}</b>
             </div>
         </section>
-        <section class="books">
+        {% for b in cart_list %}
+        <section class="books" method="get">
             <div>
-                <img src="{{url_for('static', filename='images/don quixote.jpg')}}" alt="Don Quixote" height="400" width="200">
-                <p><b>Title: Don Quixote</b></p>
-                <p>ISBN: 0060934344</p>
-                <p>Price: $21.03</p>
-                <button type="button" class="btn">Remove</button>
+                <img src= "{{ b[3] }}" alt="book image" height="400" width="200"> <!-- try sourcing with img url, not file-->
+                <p style="font-weight: bold;"> Title: {{ b[0] }}</p>
+                <p> ISBN: {{ b[1] }}</p>
+                <p> Price: ${{ b[2] }}</p>
+                <p> 'Add to cart' date: {{ b[4] }}</p>
+                <form action="{{ url_for('delete_shopping_cart_normal', date=b[4]) }}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input class="btn" type="submit" name='delete' value="delete" style="width: 100px;">
+                  </form>
             </div>
         </section>
+        {% endfor %}
     </div>
     <footer>
         <div class="container">
