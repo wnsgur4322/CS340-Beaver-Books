@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block styles %}
+    <meta charset="UTF-8">
+    <title>Beaver Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#03a6f3">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+ <!-- deploy python flask-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/fontawesome.min.css') }}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900' rel='stylesheet' type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="{{ font_url1 }}">
+    <link rel="stylesheet" href="{{ font_url2 }}">
+    {% endblock %}
+</head>
+
+<body>
+    <header>
+        <div class="container" style="min-height:100% width:80%">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            <div class="main-menu">
+                <div class="container">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="{{url_for('index') }}">Beaver Books</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="navbar-item active">
+                                    <a href="{{url_for('admin') }}" class="nav-link">Admin</a>
+                                </li>
+                                <li class="navbar-item">
+                                    <a href="{{url_for('index') }}" class="nav-link">Home</a>
+                                </li>
+                                <li class="navbar-item">
+                                    <a href="{{url_for('shop') }}" class="nav-link">Shop</a>
+                                </li>
+                                <li class="navbar-item"> 
+                                    <a href="{{url_for('about') }}" class="nav-link">About</a>
+                                </li>
+                                <li class="navbar-item">
+                                    <a href="{{url_for('logout') }}" class="nav-link">Sign out</a>
+                                </li>
+                                <li class="navbar-item">
+                                    <a href="{{url_for('shopping_cart') }}" class="fa fa-shopping-cart"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <div class="breadcrumb">
+            <div class="container">
+                <a class="breadcrumb-item" href="{{url_for('index') }}">Home</a>
+                <a class="breadcrumb-item" href="{{url_for('admin') }}">Admin</a>
+                <span class="breadcrumb-item active" style="font-weight: bold;">Update book</span>
+            </div>
+        </div>
+        <section class="static about-sec">
+            <div class="container">
+            <h1 style="color: black; padding-bottom: 15px;">Update Book</h1>
+            <table style="width:60%; margin-bottom: 20px; text-align: center;" align="center" border="1px black">
+                <tr>
+                  <th>isbn</th>
+                  <th>title</th>
+                  <th>price</th>
+                  <th>publisher_id</th>
+                  <th>year</th>
+                  <th>book image</th>
+              </tr>
+              {% for r in book_info %}
+              <tr>
+                <td> {{ r[0] }}</td>
+                <td> {{ r[1] }}</td>
+                <td> {{ r[2] }}</td>
+                <td> {{ r[3] }}</td>
+                <td> {{ r[4] }}</td>
+                <td><img src= "{{ r[5] }}" alt="book image" height="210" width="140"></td>
+              </tr>
+                </tr>
+              </table>
+            <div class="form">
+            <form class="center" id="book_update" action="{{ url_for('book_update', isbn=r[0]) }}" method="post">
+                <div class="row">
+                    <p style= "font-weight: bold; margin-right: 80.45px;">New price</p>
+                    <div class="col-md-4">
+                        <input type="number" name="price" min="0" step="0.01" placeholder="Enter new price here" required style="width: 350px; height: 40px;">
+                    </div>
+                </div>
+                <div class="row">
+                    <p style= "font-weight: bold; margin-right: 80.45px;">New Year</p>
+                    <div class="col-md-4">
+                        <input type="number" name="year" min="0" placeholder="Enter new year here" required style="width: 350px; height: 40px;">
+                    </div>
+                </div>
+                <div class="row">
+                    <p style= "font-weight: bold;">New book image url</p>
+                    <div class="col-md-4">
+                        <input type="url" name="book_img" placeholder="Enter new book image url here" required style="width: 350px; height: 40px;">
+                    </div>
+                </div>
+    
+            <input class="btn black" type="submit" value="Submit">
+            </form>
+            </div>
+         </div>
+        </section>
+        {% endfor %}
+    
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="center">
+                        <div class="login_address">
+                            <h4>Our Address</h4>
+                            <h6>Oregon State University, Corvaills, OR, USA</h6>
+                            <h6>Call : 541 123 4567</h6>
+                            <h6>Email : beaverbooks@gmail.com</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copy-right">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>(C) 2020. All Rights Reserved. Beaver Books</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="share align-middle">
+                                <span class="fb"><i class="fa fa-facebook-official"></i></span>
+                                <span class="instagram"><i class="fa fa-instagram"></i></span>
+                                <span class="twitter"><i class="fa fa-twitter"></i></span>
+                                <span class="pinterest"><i class="fa fa-pinterest"></i></span>
+                                <span class="google"><i class="fa fa-google-plus"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {% block scripts %}
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/owl.carousel.min.js"></script>
+        <script src="js/custom.js"></script>
+    
+        <!-- deploy python flask-->
+    
+        <script src="{{url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script type=text/javascript src="{{url_for('static', filename='js/owl.carousel.min.js') }}"></script>
+        <script src="{{url_for('static', filename='js/custom.js') }}"></script>
+        {% endblock %}
+    </body>
+    </html>
+    

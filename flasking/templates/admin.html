@@ -87,6 +87,7 @@
           <th>publisher_id</th>
           <th>year</th>
           <th style="width: 10px;">delete</th>
+          <th style="width: 10px;">update</th>
         </tr>
             {% for r in books %}
             <tr>
@@ -101,6 +102,11 @@
                   <input class="btn black" type="submit" name='delete' value="delete" style="width: 100px;">
                 </form>
                 </td>
+              <td><form action="{{ url_for('book_update', isbn=r.0)}}">
+                  <input type="hidden" name="_method" value="UPDATE">
+                  <input class="btn black" type="submit" name='update' value="update" style="width: 100px;">
+              </form>
+            </td>
             </tr>
             {% endfor %}
       </table>

@@ -410,3 +410,28 @@ def account_update():
 
     print("Fetching and rendering account_update.html web page")
     return render_template('account_update.html', user_info = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+
+@webapp.route('/book_update.html/<int:isbn>', methods=['POST', 'GET'])
+def book_update(isbn):
+    db_connection = connect_to_database()
+
+    if request.method == "GET":
+        query = "SELECT * FROM books WHERE isbn = %d" % isbn
+        result = execute_query(db_connection, query).fetchall()
+        print(result)
+        print("Fetching and rendering book_update.html web page")
+        return render_template('book_update.html', book_info = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+
+
+
+    if request.method == "POST":
+        print("update book info !")
+        new_price = request.form['price']
+        new_year = request.form['year']
+        new_book_img = request.form['book_img']
+
+        query2 = "UPDATE books SET price = %s, year = %s, book_img = %s WHERE isbn = %s"
+        data = (new_price, new_year, new_book_img, isbn)
+        execute_query(db_connection, query2, data)
+        flash("selected book has successfully updated !")
+        return redirect(url_for('admin'))
