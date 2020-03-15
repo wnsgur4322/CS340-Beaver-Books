@@ -63,7 +63,7 @@ def admin():
     print("Fetching and rendering admin web page")
     db_connection = connect_to_database()
     # load books table from DB
-    query = "SELECT * FROM books;"
+    query = "SELECT books.isbn, books.title, books.price, authors.first_name, authors.last_name, publishers.company_name, books.year FROM books INNER JOIN books_authors ON books.isbn = books_authors.isbn INNER JOIN authors ON books_authors.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id;"
     result = execute_query(db_connection, query).fetchall()
     
     # load users table from DB

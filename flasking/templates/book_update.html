@@ -47,22 +47,22 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ml-auto">
                                 <li class="navbar-item active">
-                                    <a href="{{url_for('admin') }}" class="nav-link">Admin</a>
+                                    <a href="{{ url_for('admin') }}" class="nav-link">Admin</a>
                                 </li>
                                 <li class="navbar-item">
-                                    <a href="{{url_for('index') }}" class="nav-link">Home</a>
+                                    <a href="{{ url_for('index') }}" class="nav-link">Home</a>
                                 </li>
                                 <li class="navbar-item">
-                                    <a href="{{url_for('shop') }}" class="nav-link">Shop</a>
+                                    <a href="{{ url_for('shop') }}" class="nav-link">Shop</a>
                                 </li>
                                 <li class="navbar-item"> 
-                                    <a href="{{url_for('about') }}" class="nav-link">About</a>
+                                    <a href="{{ url_for('about') }}" class="nav-link">About</a>
                                 </li>
                                 <li class="navbar-item">
-                                    <a href="{{url_for('logout') }}" class="nav-link">Sign out</a>
+                                    <a href="{{ url_for('logout') }}" class="nav-link">Sign out</a>
                                 </li>
                                 <li class="navbar-item">
-                                    <a href="{{url_for('shopping_cart') }}" class="fa fa-shopping-cart"></a>
+                                    <a href="{{ url_for('shopping_cart') }}" class="fa fa-shopping-cart"></a>
                                 </li>
                             </ul>
                         </div>
@@ -73,8 +73,8 @@
 
         <div class="breadcrumb">
             <div class="container">
-                <a class="breadcrumb-item" href="{{url_for('index') }}">Home</a>
-                <a class="breadcrumb-item" href="{{url_for('admin') }}">Admin</a>
+                <a class="breadcrumb-item" href="{{ url_for('index') }}">Home</a>
+                <a class="breadcrumb-item" href="{{ url_for('admin') }}">Admin</a>
                 <span class="breadcrumb-item active" style="font-weight: bold;">Update book</span>
             </div>
         </div>
@@ -107,18 +107,20 @@
                     <p style= "font-weight: bold; margin-right: 80.45px;">New price</p>
                     <div class="col-md-4">
                         <input type="number" name="price" min="0" step="0.01" placeholder="Enter new price here" required style="width: 350px; height: 40px;">
+                        <span class="required-star">*</span>
                     </div>
                 </div>
                 <div class="row">
                     <p style= "font-weight: bold; margin-right: 80.45px;">New Year</p>
                     <div class="col-md-4">
                         <input type="number" name="year" min="0" placeholder="Enter new year here" required style="width: 350px; height: 40px;">
+                        <span class="required-star">*</span>
                     </div>
                 </div>
                 <div class="row">
                     <p style= "font-weight: bold;">New book image url</p>
                     <div class="col-md-4">
-                        <input type="url" name="book_img" placeholder="Enter new book image url here" required style="width: 350px; height: 40px;">
+                        <input type="url" name="book_img" placeholder="Enter new book image url here or empty" style="width: 350px; height: 40px;">
                     </div>
                 </div>
     

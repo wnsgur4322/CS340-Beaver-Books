@@ -36,29 +36,29 @@
         <div class="main-menu">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="index.html">Beaver Books</a>
+                    <a class="navbar-brand" href="{{ url_for('index') }}">Beaver Books</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
                             <li class="navbar-item">
-                                <a href="admin.html" class="nav-link">Admin</a>
+                                <a href="{{ url_for('admin') }}" class="nav-link">Admin</a>
                             </li>
                             <li class="navbar-item">
-                                <a href="index.html" class="nav-link">Home</a>
+                                <a href="{{ url_for('index') }}" class="nav-link">Home</a>
                             </li>
                             <li class="navbar-item">
-                                <a href="shop.html" class="nav-link">Shop</a>
+                                <a href="{{ url_for('shop') }}" class="nav-link">Shop</a>
                             </li>
                             <li class="navbar-item">
-                                <a href="about.html" class="nav-link">About</a>
+                                <a href="{{ url_for('about') }}" class="nav-link">About</a>
                             </li>
                             <li class="navbar-item">
-                                <a href="logout" class="nav-link">Sign out</a>
+                                <a href="{{ url_for('logout') }}" class="nav-link">Sign out</a>
                             </li>
                             <li class="navbar-item active">
-                                <a href="shopping_cart.html" class="fa fa-shopping-cart"></a>
+                                <a href="{{ url_for('shopping_cart') }}" class="fa fa-shopping-cart"></a>
                             </li>
                         </ul>
                     </div>
@@ -68,8 +68,8 @@
     </header>
     <div class="breadcrumb">
         <div class="container">
-            <a class="breadcrumb-item" href="index.html">Home</a>
-            <span class="breadcrumb-item active">Shopping cart</span>
+            <a class="breadcrumb-item" href="{{ url_for('index') }}">Home</a>
+            <span class="breadcrumb-item active" style="font-weight: bold;">Shopping cart</span>
         </div>
     </div>
     <div>

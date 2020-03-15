@@ -43,7 +43,7 @@
     </header>
     <div class="breadcrumb">
         <div class="container">
-            <a class="breadcrumb-item" href="login.html">Login</a>
+            <a class="breadcrumb-item" href="{{ url_for('login') }}">Login</a>
             <span class="breadcrumb-item active" style="font-weight: bold;">Register</span>
         </div>
     </div>
@@ -92,7 +92,7 @@
                     <div class="row">
                         <div class="col-lg-8 col-md-12">
                             <button class="btn black">Register</button>
-                            <h5> Registered? <a href="login.html">Login here</a></h5>
+                            <h5> Registered? <a href="{{ url_for('login') }}">Login here</a></h5>
                         </div>
                     </div>
                 </form>
