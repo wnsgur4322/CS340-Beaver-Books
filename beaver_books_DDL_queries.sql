@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: classmysql.engr.oregonstate.edu:3306
--- Generation Time: Mar 09, 2020 at 12:18 AM
+-- Generation Time: Mar 16, 2020 at 12:24 AM
 -- Server version: 10.4.11-MariaDB-log
 -- PHP Version: 7.0.33
 
@@ -42,11 +42,14 @@ CREATE TABLE `authors` (
 --
 
 INSERT INTO `authors` (`author_id`, `first_name`, `last_name`, `address`, `url`) VALUES
-(0, 'kimchi', 'tester', 'anywhere on the earth', 'https://google.com'),
 (1, 'Harper', 'Lee', '195 Broadway Floor 22, New York, NY 10007 USA', 'https://www.biography.com/writer/harper-lee'),
 (2, 'Miguel De', 'Cervantes', 'Madrid, Spain', 'https://www.biography.com/writer/miguel-de-cervantes'),
 (3, 'Joe', 'Caramagna', NULL, 'https://marvel.fandom.com/wiki/Joe_Caramagna_(Earth-1218)'),
-(4, 'Joey', 'Cavalieri', NULL, 'https://sva.edu/faculty/joey-cavalieri');
+(4, 'Joey', 'Cavalieri', NULL, 'https://sva.edu/faculty/joey-cavalieri'),
+(5, 'asd', 'asd', 'asd', 'https://google.com'),
+(6, 'JRR', 'Tolkein', 'England', ''),
+(7, 'Test', 'McTesty', 'Test Lane', 'http://www.test.com'),
+(8, 'test', 'test', 'test', '');
 
 -- --------------------------------------------------------
 
@@ -69,8 +72,10 @@ CREATE TABLE `books` (
 --
 
 INSERT INTO `books` (`isbn`, `title`, `price`, `publisher_id`, `year`, `book_img`) VALUES
+(0000001211, 'test2', '123.00', 1, 1235, ''),
 (0060934344, 'Don Quixote', '21.03', 2, 1605, 'https://images-na.ssl-images-amazon.com/images/I/410UIVet23L._SX311_BO1,204,203,200_.jpg'),
 (0060935464, 'To Kill a Mockingbird', '17.30', 1, 1960, 'https://images-na.ssl-images-amazon.com/images/I/51JBKEB3ecL._SX295_BO1,204,203,200_.jpg'),
+(0123123123, 'Get me out of here', '1225.00', 4, 2020, 'https://images-na.ssl-images-amazon.com/images/I/91i63LjzlIL.jpg'),
 (1684052084, 'DuckTales: Treasure Trove', '8.26', 3, 2018, 'https://images-na.ssl-images-amazon.com/images/I/51YTMe783WL._SX329_BO1,204,203,200_.jpg');
 
 -- --------------------------------------------------------
@@ -93,7 +98,11 @@ INSERT INTO `books_authors` (`isbn`, `author_id`) VALUES
 (0060935464, 1),
 (0060934344, 2),
 (1684052084, 4),
-(1684052084, 3);
+(1684052084, 3),
+(0123123123, 5),
+(0000001211, 1),
+(0000001211, 2),
+(0000001211, 3);
 
 -- --------------------------------------------------------
 
@@ -117,7 +126,10 @@ CREATE TABLE `publishers` (
 INSERT INTO `publishers` (`publisher_id`, `company_name`, `contact`, `address`, `url`) VALUES
 (1, 'J. B. Lippincott & Co.', '(215) 732-6200', '227 S. 6th Street, Philadelphia, PA 19106 USA', NULL),
 (2, 'Ecco Press', '(212) 207-7000', '195 Broadway, New York, NY 10007 USA', 'https://www.harpercollins.com/corporate/customer-service/contact-us/'),
-(3, 'IDW Publishing', 'info@idwpublishing.com', '2765 Truxtun Road, San Diego, CA 92106 USA', 'https://www.idwpublishing.com/contact/');
+(3, 'IDW Publishing', 'info@idwpublishing.com', '2765 Truxtun Road, San Diego, CA 92106 USA', 'https://www.idwpublishing.com/contact/'),
+(4, 'Google Inc.', 'info@gmail.com', 'ANDROID PARK NEXT TO APPLE INC. HQ IN SF, CA', 'https://google.com'),
+(5, 'PenguinHouse', 'Emily Crant', 'ECr@phpub.com', 'https://www.penguinrandomhouse.com/'),
+(6, 'test', 'test', 'test', '');
 
 -- --------------------------------------------------------
 
@@ -137,10 +149,9 @@ CREATE TABLE `shopping_carts` (
 --
 
 INSERT INTO `shopping_carts` (`user_id`, `isbn`, `date`) VALUES
-(1, 0060935464, '2020-02-15 21:03:42'),
-(1, 0060934344, '2020-02-15 21:05:22'),
-(2, 1684052084, '2020-02-16 23:05:12'),
-(3, 1684052084, '2020-02-25 08:05:15');
+(3, 1684052084, '2020-02-25 08:05:15'),
+(2, 0060934344, '2020-03-09 10:14:20'),
+(1, 0060934344, '2020-03-15 05:56:39');
 
 -- --------------------------------------------------------
 
@@ -164,9 +175,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `email`, `first_name`, `last_name`, `address`, `password`) VALUES
 (1, 'kimchi@gmail', 'Taco', 'Kimchi', 'Super admin acccount', 'taco'),
-(2, 'benny@oregonstate.edu', 'Benny', 'Beaver', '1234 NW Corvallis Avenue, Corvallis, Oregon', 'gobeavs'),
+(2, 'benny@oregonstate.edu', 'Benny', 'Beaver', '1234 NW Corvallis Avenue, Corvallis, Oregon', 'bestbeaver'),
 (3, 'duck@uoregon.edu', 'Puddles', 'Duck', '5678 SW Eugene Avenue, Eugene, Oregon', 'goducks'),
-(4, 'test@test.com', 'kimchi', 'kimchi', 'test street ', 'test');
+(5, 'asdfas@asdf.vom', 'asdf', 'dfasf', 'asdf', 'qigjUg-qistid-9haszo'),
+(7, 'donutmaster@donut.com', 'Donut', 'Master', 'donut', 'donut');
 
 --
 -- Indexes for dumped tables
@@ -216,16 +228,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `authors`
+--
+ALTER TABLE `authors`
+  MODIFY `author_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `publishers`
+--
+ALTER TABLE `publishers`
+  MODIFY `publisher_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
-ALTER TABLE `authors`
-  MODIFY `author_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
-
-ALTER TABLE `publishers`
-  MODIFY `publisher_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables

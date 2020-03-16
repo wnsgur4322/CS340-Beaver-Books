@@ -1,3 +1,18 @@
+.search_input {
+  background-image: url('https://img.icons8.com/ios/50/000000/search-more.png');
+  background-position: 10px 12px; 
+  background-repeat: no-repeat; 
+  width: 100%; 
+  font-size: 16px; 
+  padding: 12px 20px 12px 40px; 
+  border: 1px solid #ddd; 
+  margin-bottom: 12px;
+  margin-left: 100px;
+  margin-top: 50px;
+  display: flex;
+  align-items: flex-end; 
+}
+
 .shop_searchbox {
   margin-left: 100px;
   margin-top: 50px;

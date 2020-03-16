@@ -65,7 +65,30 @@ def admin():
     # load books table from DB
     query = "SELECT books.isbn, books.title, books.price, authors.first_name, authors.last_name, publishers.company_name, books.year FROM books INNER JOIN books_authors ON books.isbn = books_authors.isbn INNER JOIN authors ON books_authors.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id;"
     result = execute_query(db_connection, query).fetchall()
-    
+    result = list(result)
+    for i in range(len(result)):
+        result[i] = list(result[i])
+    print(result)
+
+    length = len(result)
+    index = 0
+    while index < length:
+        key = result[index][1]
+        adding = ""
+        index2 = 0
+        while index2 < length:
+            if key == result[index2][1] and index != index2:
+                adding = ", " + result[index2][3] + " " + result[index2][4]
+                print(adding)
+
+                print("deleting!")
+                result[index][4] = str(result[index][4]) + str(adding)
+                result = result[:index2] + result[index2+1:]
+                length -= 1
+            
+            index2 += 1
+        index += 1
+   
     # load users table from DB
     query2 = "SELECT * FROM users;"
     result2 = execute_query(db_connection, query2).fetchall()
@@ -108,7 +131,9 @@ def add_new_books():
         year = request.form['year']
         publisher_id = request.form['publisher_id']
         book_img = request.form['book_img']
-        author_id = request.form['author_id']
+        author_id = request.form.getlist('author_id')
+        print(str(author_id), type(str(author_id)), len(author_id))
+        print(author_id[0], str(author_id[0]))
         
         if float(price) >= 0 and int(year) >= 0 and int(isbn) >= 0: 
             query3 = 'INSERT INTO books (isbn, title, price, publisher_id, year, book_img) VALUES (%s,%s,%s,%s,%s,%s)'
@@ -116,9 +141,13 @@ def add_new_books():
             execute_query(db_connection, query3, data)
             query4 = "SELECT isbn from books"
             result3 = execute_query(db_connection, query4).fetchall()
-            query5 = 'INSERT INTO books_authors (isbn, author_id) VALUES (%s,%s)'
-            data2 = (isbn,author_id)
-            execute_query(db_connection, query5,data2)
+
+
+            for i in range(len(author_id)):
+                query5 = 'INSERT INTO books_authors (isbn, author_id) VALUES (%s, %s)'
+                data2 = (isbn, author_id[i])
+                execute_query(db_connection, query5, data2)
+            
             if booklist_len != len(result3):
                 flash("You have successfully added new book on the booklist!")
                 return redirect(url_for('admin'))
@@ -240,18 +269,66 @@ def shopping_cart_normal():
 def shop():
     db_connection = connect_to_database()
     print("get GET ! \n")
+
     query = 'SELECT books.title, books.isbn, authors.first_name, authors.last_name, publishers.company_name, books.year, books.price, books.book_img from books INNER JOIN books_authors ON books.isbn = books_authors.isbn INNER JOIN authors ON books_authors.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id;'
     result = execute_query(db_connection, query).fetchall()
-    
-    for i in range(len(result)):
-        try:
-            key = result[i][1]
-            for j in range(len(result)):
-                if key == result[j][1] and i != j:
+
+    if request.method == 'POST':
+        search_input = request.form['search']
+        print(search_input)
+
+        query2 = 'SELECT books.title, books.isbn, authors.first_name, authors.last_name, publishers.company_name, books.year, books.price, books.book_img from books INNER JOIN books_authors ON books.isbn = books_authors.isbn INNER JOIN authors ON books_authors.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id WHERE title LIKE "%%{0}%%"; '.format(search_input)
+        result2 = execute_query(db_connection, query2).fetchall()
+        
+        result2 = list(result2)
+        for i in range(len(result2)):
+            result2[i] = list(result2[i])
+        print(result2)
+
+        length = len(result2)
+        index = 0
+        while index < length:
+            key = result2[index][1]
+            adding = ""
+            index2 = 0
+            while index2 < length:
+                if key == result2[index2][1] and index != index2:
+                    adding = ", " + result2[index2][2] + " " + result2[index2][3]
+                    print(adding)
+
                     print("deleting!")
-                    result = result[:j] + result[j+1:]
-        except:
-            break
+                    result2[index][3] = str(result2[index][3]) + str(adding)
+                    result2 = result2[:index2] + result2[index2+1:]
+                    length -= 1
+                
+                index2 += 1
+            index += 1
+                
+        return render_template('shop.html', book_info = result2, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    
+    result = list(result)
+    for i in range(len(result)):
+        result[i] = list(result[i])
+    print(result)
+
+    length = len(result)
+    index = 0
+    while index < length:
+        key = result[index][1]
+        adding = ""
+        index2 = 0
+        while index2 < length:
+            if key == result[index2][1] and index != index2:
+                adding = ", " + result[index2][2] + " " + result[index2][3]
+                print(adding)
+
+                print("deleting!")
+                result[index][3] = str(result[index][3]) + str(adding)
+                result = result[:index2] + result[index2+1:]
+                length -= 1
+            
+            index2 += 1
+        index += 1
 
     return render_template('shop.html', book_info = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
@@ -259,18 +336,66 @@ def shop():
 def shop_normal():
     db_connection = connect_to_database()
     print("get GET ! \n")
+
     query = 'SELECT books.title, books.isbn, authors.first_name, authors.last_name, publishers.company_name, books.year, books.price, books.book_img from books INNER JOIN books_authors ON books.isbn = books_authors.isbn INNER JOIN authors ON books_authors.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id;'
     result = execute_query(db_connection, query).fetchall()
-    
-    for i in range(len(result)):
-        try:
-            key = result[i][1]
-            for j in range(len(result)):
-                if key == result[j][1] and i != j:
+
+    if request.method == 'POST':
+        search_input = request.form['search']
+        print(search_input)
+
+        query2 = 'SELECT books.title, books.isbn, authors.first_name, authors.last_name, publishers.company_name, books.year, books.price, books.book_img from books INNER JOIN books_authors ON books.isbn = books_authors.isbn INNER JOIN authors ON books_authors.author_id = authors.author_id INNER JOIN publishers ON books.publisher_id = publishers.publisher_id WHERE title LIKE "%%{0}%%"; '.format(search_input)
+        result2 = execute_query(db_connection, query2).fetchall()
+        
+        result2 = list(result2)
+        for i in range(len(result2)):
+            result2[i] = list(result2[i])
+        print(result2)
+
+        length = len(result2)
+        index = 0
+        while index < length:
+            key = result2[index][1]
+            adding = ""
+            index2 = 0
+            while index2 < length:
+                if key == result2[index2][1] and index != index2:
+                    adding = ", " + result2[index2][2] + " " + result2[index2][3]
+                    print(adding)
+
                     print("deleting!")
-                    result = result[:j] + result[j+1:]
-        except:
-            break
+                    result2[index][3] = str(result2[index][3]) + str(adding)
+                    result2 = result2[:index2] + result2[index2+1:]
+                    length -= 1
+                
+                index2 += 1
+            index += 1
+                
+        return render_template('shop_normal.html', book_info = result2, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    
+    result = list(result)
+    for i in range(len(result)):
+        result[i] = list(result[i])
+    print(result)
+
+    length = len(result)
+    index = 0
+    while index < length:
+        key = result[index][1]
+        adding = ""
+        index2 = 0
+        while index2 < length:
+            if key == result[index2][1] and index != index2:
+                adding = ", " + result[index2][2] + " " + result[index2][3]
+                print(adding)
+
+                print("deleting!")
+                result[index][3] = str(result[index][3]) + str(adding)
+                result = result[:index2] + result[index2+1:]
+                length -= 1
+            
+            index2 += 1
+        index += 1
 
     return render_template('shop_normal.html', book_info = result, font_url1="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900", font_url2="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 

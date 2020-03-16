@@ -73,20 +73,25 @@
         </div>
     </div>
     <div>
-        <h1>Available Books</h1>
-        <form class="shop_searchbox">
-            <label for="titles" class="shop_label">Title:</label><br>
-            <input class="shop_label" type="search" id="titles" name="titles" placeholder="Search based on title..."><br>
-            <label for="authors" class="shop_label">Author:</label><br>
-            <input type="search" id="authors" name="authors" placeholder="Search based on author..."><br>
+        <h1>Available Books</h1>    
+        <form method="post">
+            <input style="background-image: url('https://img.icons8.com/ios/50/000000/search-more.png');
+            background-position: 0px 0px; 
+            background-repeat: no-repeat; 
+            width: 20%; 
+            font-size: 16px; 
+            padding: 12px 20px 12px 55px; 
+            border: 1px solid #ddd;
+            margin-left: 180px;
+            margin-top: 20px;" type="search" id="titles" name="search" method="post" placeholder="Search for titles...">
         </form>
         {% for b in book_info %}
-        <section class="books" method="get">
+        <section class="books" method="get" id="book">
             <div>
                   <img src= "{{ b[7] }}" alt="book image" height="400" width="200"> <!-- try sourcing with img url, not file-->
-                  <p style="font-weight: bold;"> Title: {{ b[0] }}</p>
+                  <p style="font-weight: bold;" id="title"> Title: {{ b[0] }}</p>
                   <p> ISBN: {{ b[1] }}</p>
-                  <p> Author: {{ b[2] }} {{ b[3] }}</p>
+                  <p> Author(s): {{ b[2] }} {{ b[3] }}</p>
                   <p> Publisher: {{ b[4] }}</p>
                   <p> Year: {{ b[5] }}</p>
                   <p> Price: ${{ b[6] }}</p>

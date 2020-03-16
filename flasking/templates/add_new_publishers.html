@@ -40,29 +40,29 @@
         <div class="main-menu">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="index.html">Beaver Books</a>
+                    <a class="navbar-brand" href="{{ url_for('index') }}">Beaver Books</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
                             <li class="navbar-item active">
-                                <a href="admin.html" class="nav-link">Admin</a>
+                                <a href="{{ url_for('admin') }}" class="nav-link">Admin</a>
                             </li>
                             <li class="navbar-item">
-                                <a href="index.html" class="nav-link">Home</a>
+                                <a href="{{ url_for('index') }}" class="nav-link">Home</a>
                             </li>
                             <li class="navbar-item">
-                                <a href="shop.html" class="nav-link">Shop</a>
+                                <a href="{{ url_for('shop') }}" class="nav-link">Shop</a>
                             </li>
                             <li class="navbar-item"> 
-                                <a href="about.html" class="nav-link">About</a>
+                                <a href="{{ url_for('about') }}" class="nav-link">About</a>
                             </li>
                             <li class="navbar-item">
-                                <a href="logout" class="nav-link">Sign out</a>
+                                <a href="{{ url_for('logout') }}" class="nav-link">Sign out</a>
                             </li>
                             <li class="navbar-item">
-                                <a href="shopping_cart.html" class="fa fa-shopping-cart"></a>
+                                <a href="{{ url_for('shopping_cart') }}" class="fa fa-shopping-cart"></a>
                             </li>
                         </ul>
                     </div>
@@ -73,8 +73,8 @@
 
     <div class="breadcrumb">
         <div class="container">
-            <a class="breadcrumb-item" href="index.html">Home</a>
-            <a class="breadcrumb-item" href="admin.html">Admin</a>
+            <a class="breadcrumb-item" href="{{ url_for('index') }}">Home</a>
+            <a class="breadcrumb-item" href="{{ url_for('admin') }}">Admin</a>
             <span class="breadcrumb-item active" style="font-weight: bold;">Add new publisher</span>
         </div>
     </div>
@@ -82,8 +82,8 @@
         <div class="container">
         <h3 style="color: black;">Add new publisher</h3>
         <form class="center" id="addbook" action="{{ url_for('add_new_publishers') }}" method="post" style="width: 60%;">
-            <div class="col-md-6" style="padding-bottom: 10px;">company: <input type="text" name="company_name"></div>
-            <div class="col-md-6" style="padding-bottom: 10px;">contact: <input type="text" name="contact"></div>
+            <div class="col-md-6" style="padding-bottom: 10px;">company: <input type="text" name="company_name" required><span class="required-star">*</span></div>
+            <div class="col-md-6" style="padding-bottom: 10px;">contact: <input type="text" name="contact" required><span class="required-star">*</span></div>
             <div class="col-md-6" style="padding-bottom: 10px;">address: <input type="text" name="address"></div>
             <div class="col-md-6" style="padding-bottom: 10px;">url: <input type="url" name="url"></div>
         <input class="btn black" type="submit" value="Submit">

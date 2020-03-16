@@ -90,7 +90,7 @@
             <span class="required-star">*</span></div>
         <div class="col-md-6" style="padding-bottom: 10px;">year: <input type="number" name="year" min="0" required>
             <span class="required-star">*</span></div>
-        <div class="col-md-6" style="padding-bottom: 10px;">author: <select name="author_id" required>
+        <div class="col-md-6" style="padding-bottom: 10px;">author: <select name="author_id" required multiple>
 	<!-- display all planets inside this dropdown -->
         {% for a in authors %}
           <option value="{{ a[0] }}">{{ a[1] }} {{ a[2] }}</option>
